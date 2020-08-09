@@ -11,6 +11,7 @@ dependencies {
   implementation(kotlin("stdlib"))
   implementation(project(":web"))
   implementation(project(":db"))
+  implementation(project(":grab"))
 
   implementation("org.slf4j:slf4j-simple:1.7.30")
 }

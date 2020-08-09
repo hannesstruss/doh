@@ -1,6 +1,6 @@
 CREATE TABLE DoughStatus (
     id TEXT NOT NULL PRIMARY KEY,
-    doughIndex INTEGER NOT NULL,
+    imageFileName TEXT NOT NULL,
     recordedAt TEXT NOT NULL,
     growth REAL NOT NULL
 );
@@ -11,3 +11,8 @@ VALUES (?, ?, ?, ?);
 
 getAll:
 SELECT * FROM DoughStatus LIMIT ?, ?;
+
+getLatest:
+SELECT * FROM DoughStatus
+ORDER BY recordedAt DESC
+LIMIT 1;
