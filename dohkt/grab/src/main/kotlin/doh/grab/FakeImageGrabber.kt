@@ -3,7 +3,6 @@ package doh.grab
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.nio.file.Files
 import java.time.LocalDateTime
 
 class FakeImageGrabber(
