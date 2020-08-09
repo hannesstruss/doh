@@ -5,4 +5,9 @@ CREATE TABLE DoughStatus (
     growth REAL NOT NULL
 );
 
+insert:
+INSERT INTO DoughStatus
+VALUES (?, ?, ?, ?);
 
+getAll:
+SELECT * FROM DoughStatus LIMIT ?, ?;

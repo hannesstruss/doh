@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
   implementation(kotlin("stdlib"))
+  implementation("com.squareup.sqldelight:sqlite-driver:1.4.0")
 }
 
 configure<SqlDelightExtension> {
