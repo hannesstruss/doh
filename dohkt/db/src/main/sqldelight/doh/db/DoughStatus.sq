@@ -1,0 +1,8 @@
+CREATE TABLE DoughStatus (
+    id TEXT NOT NULL PRIMARY KEY,
+    doughIndex INTEGER NOT NULL,
+    recordedAt TEXT NOT NULL,
+    growth REAL NOT NULL
+);
+
+

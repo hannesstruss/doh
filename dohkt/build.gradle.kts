@@ -1,7 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+buildscript {
+  repositories {
+    google()
+    mavenCentral()
+    jcenter()
+  }
+}
+
 plugins {
   kotlin("jvm") version "1.3.72" apply false
+  id("com.squareup.sqldelight") version "1.4.0" apply false
 }
 
 subprojects {
