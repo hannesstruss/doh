@@ -1,3 +1,5 @@
+import doh.meta.Deps
+
 plugins {
   kotlin("jvm")
   application
@@ -13,5 +15,5 @@ dependencies {
   implementation(project(":db"))
   implementation(project(":grab"))
 
-  implementation("org.slf4j:slf4j-simple:1.7.30")
+  implementation(Deps.Slf4jSimple)
 }

@@ -1,3 +1,5 @@
+import doh.meta.Deps
+
 plugins {
   kotlin("jvm")
 }
@@ -9,7 +11,7 @@ repositories {
 
 dependencies {
   implementation(kotlin("stdlib"))
-  api("io.ktor:ktor-server-netty:1.3.2")
-  implementation("io.ktor:ktor-html-builder:1.3.2")
+  api(Deps.Ktor.serverNetty)
+  implementation(Deps.Ktor.htmlBuilder)
   implementation(project(":db"))
 }

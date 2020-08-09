@@ -1,4 +1,5 @@
 import com.squareup.sqldelight.gradle.SqlDelightExtension
+import doh.meta.Deps
 
 plugins {
   kotlin("jvm")
@@ -8,9 +9,9 @@ plugins {
 dependencies {
   implementation(kotlin("stdlib"))
 
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8")
+  implementation(Deps.KotlinX.coroutinesCore)
 
-  implementation("com.squareup.sqldelight:sqlite-driver:1.4.0")
+  implementation(Deps.SqlDelightDriver)
 }
 
 configure<SqlDelightExtension> {
