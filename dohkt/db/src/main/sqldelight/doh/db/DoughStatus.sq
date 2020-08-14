@@ -1,13 +1,15 @@
+import java.time.Instant;
+import java.util.UUID;
+
 CREATE TABLE DoughStatus (
-    id TEXT NOT NULL PRIMARY KEY,
-    imageFileName TEXT NOT NULL,
-    recordedAt TEXT NOT NULL,
+    id TEXT AS UUID NOT NULL PRIMARY KEY,
+    recordedAt INTEGER AS Instant NOT NULL,
     growth REAL NOT NULL
 );
 
 insert:
 INSERT INTO DoughStatus
-VALUES (?, ?, ?, ?);
+VALUES (?, ?, ?);
 
 getAll:
 SELECT * FROM DoughStatus LIMIT ?, ?;
