@@ -29,3 +29,17 @@ subprojects {
 
 group = "org.example"
 version = "0.1-SNAPSHOT"
+
+tasks.register("deployToPi") {
+  group = "deploy"
+  dependsOn(":app:distZip")
+  doLast {
+    exec {
+      standardOutput = System.out
+      val distZipProvider = project(":app").tasks.named("distZip") as TaskProvider<Zip>
+      val archivePath = distZipProvider.get().archiveFile.get().asFile.absolutePath
+
+      commandLine = listOf("bash", "gradle/deploypi.sh", archivePath)
+    }
+  }
+}
