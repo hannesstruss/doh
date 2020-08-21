@@ -32,6 +32,7 @@ fun createWebApp(
           if (status != null) {
             p { +"Recorded at: ${status.recordedAt}" }
             p { +"Growth: ${status.growth}" }
+            p { +"Total records: ${repo.getAll().size}" }
             p {
               img(src = "/dough-images/${status.imageFile}") {
                 width = "100%"

@@ -16,10 +16,10 @@ import javax.inject.Inject
 
 class DohApp @Inject constructor(
   private val imageGrabber: ImageGrabber,
-  @ImageDir private val imageDir: File
+  @ImageDir private val imageDir: File,
+  private val repo: DoughStatusRepo
 ) {
   fun run() {
-    val repo = DoughStatusRepo(null)
     val analyzerLoop = AnalyzerLoop(Analyzer(), imageGrabber, repo, Duration.ofMinutes(10))
 
     val context = SupervisorJob()
