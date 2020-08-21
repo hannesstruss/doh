@@ -22,7 +22,7 @@ fun createInMemoryDb(): DohDatabase {
   for (n in 1 until 5) {
     db.doughStatusQueries.insert(
       UUID.randomUUID(),
-      Instant.now().minus(n * 5 + 5L, ChronoUnit.MINUTES),
+      Instant.now().minus((n - 1) * 30 + 5L, ChronoUnit.MINUTES),
       "sourdough-dummy-$n.jpg",
       n * 0.1
     )
