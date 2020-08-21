@@ -2,6 +2,7 @@ package doh.meta
 
 object Versions {
   const val ktor = "1.3.2"
+  const val dagger = "2.28.3"
 
   object KotlinX {
     const val coroutinesCore = "1.3.8"
@@ -18,6 +19,11 @@ object Deps {
   object Ktor {
     const val serverNetty = "io.ktor:ktor-server-netty:${Versions.ktor}"
     const val htmlBuilder = "io.ktor:ktor-html-builder:${Versions.ktor}"
+  }
+
+  object Dagger {
+    const val dagger = "com.google.dagger:dagger:${Versions.dagger}"
+    const val compiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
   }
 
   const val SqlDelightDriver = "com.squareup.sqldelight:sqlite-driver:1.4.0"
