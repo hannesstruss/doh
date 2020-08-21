@@ -32,11 +32,11 @@ fun createWebApp(
           if (status != null) {
             p { +"Recorded at: ${status.recordedAt}" }
             p { +"Growth: ${status.growth}" }
-//            p {
-//              img(src = "/dough-images/${status.imageFileName}") {
-//                width = "100%"
-//              }
-//            }
+            p {
+              img(src = "/dough-images/${status.imageFile}") {
+                width = "100%"
+              }
+            }
           }
         }
       }

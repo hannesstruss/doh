@@ -6,10 +6,10 @@ import doh.db.adapters.UUIDAdapter
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.time.Instant
-import java.util.UUID
 
-class DoughStatusRepo(dbFile: File?) {
+class DoughStatusRepo(
+  dbFile: File?
+) {
   private val db: DohDatabase
 
   init {
@@ -31,18 +31,13 @@ class DoughStatusRepo(dbFile: File?) {
     return db.doughStatusQueries.getAll(0, 100).executeAsList()
   }
 
-  suspend fun insert(
-    growth: Double
-  ) = withContext(IO) {
+  suspend fun insert(status: DoughStatus) = withContext(IO) {
     db.doughStatusQueries.insert(
-      id = UUID.randomUUID(),
-      recordedAt = Instant.now(),
-      growth = growth
+      status.id,
+      status.recordedAt,
+      status.imageFile,
+      status.growth
     )
-  }
-
-  suspend fun insert(status: DoughStatus) {
-    db.doughStatusQueries.insert(status.id, status.recordedAt, status.growth)
   }
 
   suspend fun getLatestStatus(): DoughStatus? = withContext(IO) {

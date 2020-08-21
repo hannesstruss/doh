@@ -1,5 +1,0 @@
-CREATE TABLE DoughStatusImage (
-    id TEXT NOT NULL PRIMARY KEY,
-    grabbedAt INTEGER NOT NULL,
-    fileName TEXT NOT NULL
-);

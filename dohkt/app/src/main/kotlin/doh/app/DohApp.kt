@@ -11,6 +11,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
+import java.time.Duration
 import javax.inject.Inject
 
 class DohApp @Inject constructor(
@@ -19,7 +20,7 @@ class DohApp @Inject constructor(
 ) {
   fun run() {
     val repo = DoughStatusRepo(null)
-    val analyzerLoop = AnalyzerLoop(Analyzer(), imageGrabber, repo, 10_000)
+    val analyzerLoop = AnalyzerLoop(Analyzer(), imageGrabber, repo, Duration.ofMinutes(10))
 
     val context = SupervisorJob()
     val scope = CoroutineScope(context)
