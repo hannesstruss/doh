@@ -17,7 +17,8 @@ SELECT * FROM DoughStatus LIMIT ?, ?;
 
 getAllAfter:
 SELECT * FROM DoughStatus
-WHERE recordedAt >= ?;
+WHERE recordedAt >= ?
+ORDER BY recordedAt ASC;
 
 getLatest:
 SELECT * FROM DoughStatus
