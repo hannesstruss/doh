@@ -8,15 +8,18 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-  modules = [DohModule::class]
+  modules = [
+    DohModule::class,
+    DevDohModule::class
+  ]
 )
-interface DohComponent {
+interface DevDohComponent {
   fun dohApp(): DohApp
 
   @Component.Factory
   interface Factory {
     fun create(
       @BindsInstance @ImageDir imageDir: File
-    ): DohComponent
+    ): DevDohComponent
   }
 }

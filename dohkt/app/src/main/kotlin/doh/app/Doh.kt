@@ -1,12 +1,12 @@
 package doh.app
 
-import doh.app.di.DaggerDohComponent
+import doh.app.di.DaggerDevDohComponent
 import java.nio.file.Files
 
 fun main() {
   val tempImageDir = Files.createTempDirectory("doh-fakes").toFile()
 
-  val component = DaggerDohComponent.factory().create(
+  val component = DaggerDevDohComponent.factory().create(
     imageDir = tempImageDir
   )
   val app = component.dohApp()
