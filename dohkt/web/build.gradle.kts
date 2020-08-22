@@ -1,5 +1,4 @@
 import doh.meta.Deps
-import doh.meta.Versions
 
 plugins {
   kotlin("jvm")
