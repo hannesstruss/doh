@@ -58,6 +58,8 @@ fun createWebApp(
               raw("""
                 button {
                   padding: 1em;
+                  width: 4em;
+                  height: 4em;
                 }
               """.trimIndent())
             }
