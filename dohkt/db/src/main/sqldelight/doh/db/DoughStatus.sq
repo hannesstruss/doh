@@ -15,6 +15,10 @@ VALUES (?, ?, ?, ?);
 getAll:
 SELECT * FROM DoughStatus LIMIT ?, ?;
 
+getAllAfter:
+SELECT * FROM DoughStatus
+WHERE recordedAt >= ?;
+
 getLatest:
 SELECT * FROM DoughStatus
 ORDER BY recordedAt DESC

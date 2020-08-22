@@ -2,12 +2,17 @@ package doh.db
 
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
+import java.time.Instant
 
 class DoughStatusRepo(
   private val db: DohDatabase
 ) {
-  fun getAll(): List<DoughStatus> {
-    return db.doughStatusQueries.getAll(0, 100).executeAsList()
+  suspend fun getAll(): List<DoughStatus> = withContext(IO) {
+    db.doughStatusQueries.getAll(0, 100).executeAsList()
+  }
+
+  suspend fun getAllAfter(instant: Instant): List<DoughStatus> = withContext(IO) {
+    db.doughStatusQueries.getAllAfter(instant).executeAsList()
   }
 
   suspend fun insert(status: DoughStatus) = withContext(IO) {
