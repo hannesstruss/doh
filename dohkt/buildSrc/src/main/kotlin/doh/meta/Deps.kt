@@ -12,6 +12,7 @@ object Versions {
 object Deps {
   object KotlinX {
     const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.KotlinX.coroutinesCore}"
+    const val serializationCore = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC"
   }
 
   const val Slf4jSimple = "org.slf4j:slf4j-simple:1.7.30"
