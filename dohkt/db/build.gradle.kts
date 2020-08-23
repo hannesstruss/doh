@@ -15,5 +15,6 @@ dependencies {
 configure<SqlDelightExtension> {
   database("DohDatabase") {
     packageName = "doh.db"
+    schemaOutputDirectory = file("src/main/sqldelight/databases")
   }
 }
