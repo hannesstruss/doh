@@ -1,9 +1,7 @@
 package doh.app.di
 
-import dagger.BindsInstance
 import dagger.Component
 import doh.app.DohApp
-import java.io.File
 import javax.inject.Singleton
 
 @Singleton
@@ -18,8 +16,6 @@ interface DevDohComponent {
 
   @Component.Factory
   interface Factory {
-    fun create(
-      @BindsInstance @ImageDir imageDir: File
-    ): DevDohComponent
+    fun create(): DevDohComponent
   }
 }

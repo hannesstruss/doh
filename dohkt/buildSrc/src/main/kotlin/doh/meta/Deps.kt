@@ -23,6 +23,7 @@ object Deps {
   }
 
   object Dagger {
+    const val inject = "javax.inject:javax.inject:1"
     const val dagger = "com.google.dagger:dagger:${Versions.dagger}"
     const val compiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
   }

@@ -1,12 +1,14 @@
 package doh.grab
 
+import doh.config.ImageDir
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class FakeImageGrabber(
-  private val imageDir: File
+class FakeImageGrabber @Inject constructor(
+  @ImageDir private val imageDir: File
 ) : ImageGrabber {
   private var imageIndex = 0
 

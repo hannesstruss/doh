@@ -4,6 +4,7 @@ include(":app")
 include(":db")
 include(":grab")
 include(":web")
+include(":config")
 
 pluginManagement {
   resolutionStrategy {

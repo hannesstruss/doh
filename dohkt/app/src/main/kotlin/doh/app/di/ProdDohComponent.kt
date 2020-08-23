@@ -6,7 +6,10 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-  modules = [DohModule::class]
+  modules = [
+    DohModule::class,
+    ProdDohModule::class
+  ]
 )
 interface ProdDohComponent {
   fun dohApp(): DohApp

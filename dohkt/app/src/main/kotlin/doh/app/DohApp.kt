@@ -1,6 +1,6 @@
 package doh.app
 
-import doh.app.di.ImageDir
+import doh.config.ImageDir
 import doh.db.DoughStatusRepo
 import doh.grab.Analyzer
 import doh.grab.AnalyzerLoop

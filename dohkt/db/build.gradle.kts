@@ -7,8 +7,6 @@ plugins {
 }
 
 dependencies {
-  implementation(kotlin("stdlib"))
-
   implementation(Deps.KotlinX.coroutinesCore)
 
   implementation(Deps.SqlDelightDriver)

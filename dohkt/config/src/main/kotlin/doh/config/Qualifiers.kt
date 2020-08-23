@@ -1,4 +1,4 @@
-package doh.app.di
+package doh.config
 
 import javax.inject.Qualifier
 

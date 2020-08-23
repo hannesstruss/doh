@@ -11,10 +11,10 @@ application {
 }
 
 dependencies {
-  implementation(kotlin("stdlib"))
   implementation(project(":web"))
   implementation(project(":db"))
   implementation(project(":grab"))
+  implementation(project(":config"))
 
   implementation(Deps.Dagger.dagger)
   kapt(Deps.Dagger.compiler)

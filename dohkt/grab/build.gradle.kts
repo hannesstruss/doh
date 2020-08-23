@@ -5,9 +5,10 @@ plugins {
 }
 
 dependencies {
-  implementation(kotlin("stdlib"))
-
   implementation(Deps.KotlinX.coroutinesCore)
 
   implementation(project(":db"))
+  implementation(project(":config"))
+
+  api(Deps.Dagger.inject)
 }
