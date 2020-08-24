@@ -6,12 +6,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.Instant
-import java.time.OffsetDateTime
 import javax.inject.Inject
 
 class PiImageGrabber @Inject constructor(
   @ImageDir private val imageDir: File
-): ImageGrabber {
+) : ImageGrabber {
+  companion object {
+    private const val IMG_FACTOR = 0.3
+    private const val IMG_WIDTH = (IMG_FACTOR * 3280).toInt()
+    private const val IMG_HEIGHT = (IMG_FACTOR * 2464).toInt()
+  }
+
   @Suppress("BlockingMethodInNonBlockingContext")
   override suspend fun grabImage(): File = withContext(IO) {
     val filename = "doh-${Instant.now().epochSecond}.jpg"
@@ -19,7 +24,7 @@ class PiImageGrabber @Inject constructor(
 
     check(!file.exists()) { "Image file already exists: $file" }
 
-    val cmd = "raspistill -o ${file.absolutePath}"
+    val cmd = "raspistill -w $IMG_WIDTH -h $IMG_HEIGHT -o ${file.absolutePath}"
     println("${javaClass.name} running '$cmd' as UID ${System.getProperty("user.name")}")
     val process = Runtime.getRuntime()
       .exec(cmd.split(" ").toTypedArray())
