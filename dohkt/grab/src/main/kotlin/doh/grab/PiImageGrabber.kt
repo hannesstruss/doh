@@ -2,6 +2,7 @@ package doh.grab
 
 import doh.config.ImageDir
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -11,23 +12,26 @@ import javax.inject.Inject
 class PiImageGrabber @Inject constructor(
   @ImageDir private val imageDir: File
 ) : ImageGrabber {
-  companion object {
-    private const val IMG_FACTOR = 0.3
-    private const val IMG_WIDTH = (IMG_FACTOR * 3280).toInt()
-    private const val IMG_HEIGHT = (IMG_FACTOR * 2464).toInt()
-  }
-
-  @Suppress("BlockingMethodInNonBlockingContext")
   override suspend fun grabImage(): File = withContext(IO) {
     val filename = "doh-${Instant.now().epochSecond}.jpg"
+    val tempFile = File(imageDir, "temp-$filename")
     val file = File(imageDir, filename)
 
     check(!file.exists()) { "Image file already exists: $file" }
 
-    val cmd = "raspistill -w $IMG_WIDTH -h $IMG_HEIGHT -o ${file.absolutePath}"
-    println("${javaClass.name} running '$cmd' as UID ${System.getProperty("user.name")}")
-    val process = Runtime.getRuntime()
-      .exec(cmd.split(" ").toTypedArray())
+    "raspistill -o ${tempFile.absolutePath}".runShell()
+    "convert ${tempFile.absolutePath} -quality 50 -resize 50% ${file.absolutePath}".runShell()
+
+    file
+  }
+
+  @Suppress("BlockingMethodInNonBlockingContext")
+  private suspend fun String.runShell() = coroutineScope {
+    val cmd: String = this@runShell
+
+    println("PiImageGrabber running '$cmd' as UID ${System.getProperty("user.name")}")
+
+    val process = Runtime.getRuntime().exec(cmd.split(" ").toTypedArray())
     val stdout = launch {
       process.inputStream.bufferedReader().use {
         while (true) {
@@ -50,9 +54,7 @@ class PiImageGrabber @Inject constructor(
     stderr.join()
 
     if (resultCode != 0) {
-      throw RuntimeException("raspistill exited with $resultCode")
+      throw RuntimeException("'$cmd' exited with $resultCode")
     }
-
-    file
   }
 }
