@@ -6,7 +6,12 @@ import dagger.Provides
 import doh.config.ImageDir
 import doh.db.DohDatabase
 import doh.db.createFilesystemDb
+import doh.grab.Ambient
+import doh.grab.Backlight
+import doh.grab.GpioLight
+import doh.grab.GpioPin
 import doh.grab.ImageGrabber
+import doh.grab.Light
 import doh.grab.PiImageGrabber
 import java.io.File
 import javax.inject.Singleton
@@ -34,6 +39,20 @@ abstract class ProdDohModule {
       val home = System.getProperty("user.home")
       val file = File(home, "doh.sqlite")
       return createFilesystemDb(file)
+    }
+
+    @Provides
+    @Singleton
+    @Backlight
+    fun backlight(): Light {
+      return GpioLight(GpioPin(1))
+    }
+
+    @Provides
+    @Singleton
+    @Ambient
+    fun ambientLight(): Light {
+      return GpioLight(GpioPin(15))
     }
   }
 
