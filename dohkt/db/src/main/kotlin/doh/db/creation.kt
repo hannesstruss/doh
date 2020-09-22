@@ -39,10 +39,7 @@ fun createInMemoryDb(): DohDatabase {
 }
 
 fun createFilesystemDb(file: File): DohDatabase {
-  if (file.exists()) {
-    file.delete()
-  }
   val url = "jdbc:sqlite:${file.absolutePath}"
-  val db = createDb(url, true)
+  val db = createDb(url, false)
   return db
 }
