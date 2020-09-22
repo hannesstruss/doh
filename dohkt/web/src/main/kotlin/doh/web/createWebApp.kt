@@ -61,6 +61,11 @@ fun createWebApp(
                   width: 4em;
                   height: 4em;
                 }
+                
+                img#dough-img {
+                  width: 600px;
+                  max-width: 100%;
+                }
               """.trimIndent())
             }
           }
@@ -103,7 +108,6 @@ fun createWebApp(
           p {
             img {
               attributes["id"] = "dough-img"
-              width = "100%"
             }
           }
 
