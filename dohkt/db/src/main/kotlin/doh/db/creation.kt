@@ -25,6 +25,8 @@ class SchemaManager(
     val schema = DohDatabase.Schema
     val currentVersion = getVersion()
 
+    enableForeignKeys()
+
     if (currentVersion == 0) {
       schema.create(driver)
       setVersion(1)
@@ -39,6 +41,10 @@ class SchemaManager(
         println("Current schema: $currentVersion. No migration needed.")
       }
     }
+  }
+
+  private fun enableForeignKeys() {
+    driver.execute(null, "PRAGMA foreign_keys = ON;", 0, null)
   }
 
   private fun getVersion(): Int {
