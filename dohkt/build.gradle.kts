@@ -33,7 +33,7 @@ version = "0.1-SNAPSHOT"
 
 tasks.register("deployToPi") {
   group = "deploy"
-  dependsOn(":doh.doh.app:distZip")
+  dependsOn(":app:distZip")
   doLast {
     exec {
       standardOutput = System.out
