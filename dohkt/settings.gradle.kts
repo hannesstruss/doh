@@ -1,6 +1,8 @@
 rootProject.name = "doh"
 
 include(":app")
+include(":app:dev")
+include(":doh")
 include(":db")
 include(":grab")
 include(":web")

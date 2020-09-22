@@ -1,4 +1,4 @@
-package doh.app.di
+package doh.di
 
 import dagger.Module
 import dagger.Provides

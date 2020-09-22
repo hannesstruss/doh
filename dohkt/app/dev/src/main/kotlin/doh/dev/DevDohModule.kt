@@ -1,4 +1,4 @@
-package doh.app.di
+package doh.dev
 
 import dagger.Binds
 import dagger.Module
@@ -10,8 +10,6 @@ import doh.grab.Ambient
 import doh.grab.Backlight
 import doh.grab.FakeImageGrabber
 import doh.grab.FakeLight
-import doh.grab.GpioLight
-import doh.grab.GpioPin
 import doh.grab.ImageGrabber
 import doh.grab.Light
 import java.io.File

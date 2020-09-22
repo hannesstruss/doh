@@ -1,4 +1,4 @@
-package doh.app
+package doh
 
 import doh.config.ImageDir
 import doh.db.DoughStatusRepo

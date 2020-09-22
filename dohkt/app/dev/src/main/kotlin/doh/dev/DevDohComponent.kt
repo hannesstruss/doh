@@ -1,7 +1,8 @@
-package doh.app.di
+package doh.dev
 
 import dagger.Component
-import doh.app.DohApp
+import doh.DohApp
+import doh.di.DohModule
 import javax.inject.Singleton
 
 @Singleton
@@ -12,6 +13,10 @@ import javax.inject.Singleton
   ]
 )
 interface DevDohComponent {
+  companion object {
+    operator fun invoke() = DaggerDevDohComponent.create()
+  }
+
   fun dohApp(): DohApp
 
   @Component.Factory

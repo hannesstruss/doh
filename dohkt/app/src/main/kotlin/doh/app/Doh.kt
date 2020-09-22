@@ -1,14 +1,15 @@
 package doh.app
 
-import doh.app.di.DaggerDevDohComponent
-import doh.app.di.DaggerProdDohComponent
+import doh.DohApp
+import doh.dev.DevDohComponent
+import doh.di.ProdDohComponent
 
 fun main(args: Array<String>) {
   val app: DohApp = if (args.firstOrNull() == "prod") {
-    val component = DaggerProdDohComponent.create()
+    val component = ProdDohComponent()
     component.dohApp()
   } else {
-    val component = DaggerDevDohComponent.factory().create()
+    val component = DevDohComponent()
     component.dohApp()
   }
   app.run()

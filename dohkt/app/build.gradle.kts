@@ -7,14 +7,12 @@ plugins {
 }
 
 application {
-  mainClassName = "doh.app.DohKt"
+  mainClassName = "doh.doh.app.DohKt"
 }
 
 dependencies {
-  implementation(project(":web"))
-  implementation(project(":db"))
-  implementation(project(":grab"))
-  implementation(project(":config"))
+  implementation(project(":app:dev"))
+  implementation(project(":doh"))
 
   implementation(Deps.Dagger.dagger)
   kapt(Deps.Dagger.compiler)
