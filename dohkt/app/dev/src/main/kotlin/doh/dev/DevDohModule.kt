@@ -8,8 +8,6 @@ import doh.db.DohDatabase
 import doh.db.createInMemoryDb
 import doh.grab.Ambient
 import doh.grab.Backlight
-import doh.grab.FakeImageGrabber
-import doh.grab.FakeLight
 import doh.grab.ImageGrabber
 import doh.grab.Light
 import java.io.File

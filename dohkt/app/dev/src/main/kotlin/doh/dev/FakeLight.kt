@@ -1,4 +1,6 @@
-package doh.grab
+package doh.dev
+
+import doh.grab.Light
 
 class FakeLight(private val name: String) : Light {
   override fun switch(on: Boolean) {
