@@ -7,7 +7,7 @@ plugins {
 }
 
 application {
-  mainClassName = "doh.doh.app.DohKt"
+  mainClassName = "doh.app.MainKt"
 }
 
 dependencies {
