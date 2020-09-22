@@ -5,7 +5,6 @@ import dagger.Module
 import dagger.Provides
 import doh.config.ImageDir
 import doh.db.DohDatabase
-import doh.db.createInMemoryDb
 import doh.grab.Ambient
 import doh.grab.Backlight
 import doh.grab.ImageGrabber
@@ -24,7 +23,7 @@ abstract class DevDohModule {
 
     @Provides
     @Singleton
-    fun dohDatabase(): DohDatabase = createInMemoryDb()
+    fun dohDatabase(): DohDatabase = createFakeDb()
 
     @Provides
     @Singleton

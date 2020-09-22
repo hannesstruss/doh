@@ -1,3 +1,5 @@
+import doh.meta.Deps
+
 plugins {
   kotlin("jvm")
   kotlin("kapt")
@@ -6,6 +8,8 @@ plugins {
 dependencies {
   implementation(project(":doh"))
 
-  implementation(doh.meta.Deps.Dagger.dagger)
-  kapt(doh.meta.Deps.Dagger.compiler)
+  implementation(Deps.Dagger.dagger)
+  kapt(Deps.Dagger.compiler)
+
+  implementation(Deps.SqlDelightDriver)
 }
