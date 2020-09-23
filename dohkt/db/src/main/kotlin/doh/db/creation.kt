@@ -10,12 +10,13 @@ fun createDb(url: String): DohDatabase {
   val schemaManager = SchemaManager(driver)
   schemaManager.createOrMigrate()
 
-  val doughStatusAdapter = DoughStatus.Adapter(
-    recordedAtAdapter = InstantAdapter,
-    idAdapter = UUIDAdapter
+  return DohDatabase(
+    driver,
+    DoughStatusAdapter = DoughStatus.Adapter(
+      recordedAtAdapter = InstantAdapter,
+      idAdapter = UUIDAdapter
+    )
   )
-
-  return DohDatabase(driver, doughStatusAdapter)
 }
 
 class SchemaManager(

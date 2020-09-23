@@ -1,0 +1,20 @@
+BEGIN TRANSACTION;
+
+ALTER TABLE DoughStatus
+RENAME TO _DoughStatus;
+
+CREATE TABLE DoughStatus (
+    id TEXT NOT NULL PRIMARY KEY,
+    recordedAt INTEGER NOT NULL,
+    backlitImageFile TEXT NOT NULL,
+    ambientImageFile TEXT,
+    growth REAL NOT NULL
+);
+
+INSERT INTO DoughStatus (id, recordedAt, backlitImageFile, growth)
+SELECT id, recordedAt, imageFile, growth
+FROM _DoughStatus;
+
+DROP TABLE _DoughStatus;
+
+COMMIT;

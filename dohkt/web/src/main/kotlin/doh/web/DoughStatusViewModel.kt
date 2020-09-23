@@ -10,7 +10,7 @@ data class DoughStatusViewModel(
   val id: String,
   val recordedAt: String,
   val recordedAtEpochSeconds: Long,
-  val imagePath: String,
+  val backlitImagePath: String,
   val growth: Double
 ) {
   companion object {
@@ -20,7 +20,7 @@ data class DoughStatusViewModel(
       id = doughStatus.id.toString(),
       recordedAt = doughStatus.recordedAt.atZone(ZoneId.of("Europe/Berlin")).format(formatter),
       recordedAtEpochSeconds = doughStatus.recordedAt.epochSecond,
-      imagePath = "$imagesPath/${doughStatus.imageFile}",
+      backlitImagePath = "$imagesPath/${doughStatus.backlitImageFile}",
       growth = doughStatus.growth
     )
   }

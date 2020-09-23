@@ -7,6 +7,6 @@ import java.util.UUID
 
 class Analyzer {
   suspend fun analyze(imageFile: File): DoughStatus {
-    return DoughStatus(UUID.randomUUID(), Instant.now(), imageFile.name, 1.2)
+    return DoughStatus(UUID.randomUUID(), Instant.now(), imageFile.name, null, 1.2)
   }
 }
