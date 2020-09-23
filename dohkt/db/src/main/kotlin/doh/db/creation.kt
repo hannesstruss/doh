@@ -35,6 +35,7 @@ class SchemaManager(
     } else {
       val latestSchemaVersion = schema.version
       if (latestSchemaVersion > currentVersion) {
+        println("Current schema: $currentVersion Latest: $latestSchemaVersion - Migrating!")
         schema.migrate(driver, currentVersion, latestSchemaVersion)
         setVersion(latestSchemaVersion)
         println("Migrated from $currentVersion to $latestSchemaVersion")

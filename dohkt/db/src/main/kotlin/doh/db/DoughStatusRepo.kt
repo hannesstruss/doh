@@ -19,8 +19,7 @@ class DoughStatusRepo(
     db.doughStatusQueries.insert(
       status.id,
       status.recordedAt,
-      status.backlitImageFile,
-      status.growth
+      status.backlitImageFile
     )
   }
 

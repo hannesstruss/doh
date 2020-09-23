@@ -5,13 +5,12 @@ CREATE TABLE DoughStatus (
     id TEXT AS UUID NOT NULL PRIMARY KEY,
     recordedAt INTEGER AS Instant NOT NULL,
     backlitImageFile TEXT NOT NULL,
-    ambientImageFile TEXT,
-    growth REAL NOT NULL
+    ambientImageFile TEXT
 );
 
 insert:
-INSERT INTO DoughStatus (id, recordedAt, backlitImageFile, growth)
-VALUES (?, ?, ?, ?);
+INSERT INTO DoughStatus (id, recordedAt, backlitImageFile)
+VALUES (?, ?, ?);
 
 getAll:
 SELECT * FROM DoughStatus LIMIT ?, ?;
