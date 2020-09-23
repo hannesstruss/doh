@@ -29,7 +29,7 @@ class SchemaManager(
 
     if (currentVersion == 0) {
       schema.create(driver)
-      setVersion(1)
+      setVersion(schema.version)
       println("Schema created")
     } else {
       val latestSchemaVersion = schema.version
