@@ -25,7 +25,7 @@ class AnalyzerLoop(
           ambientFilename = images.ambientImage.name
         )
       }
-      
+
       delay(grabFrequency.toMillis() - duration)
     }
   }
