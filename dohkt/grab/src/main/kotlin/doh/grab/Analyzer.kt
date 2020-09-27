@@ -6,7 +6,7 @@ import java.time.Instant
 import java.util.UUID
 
 class Analyzer {
-  suspend fun analyze(imageFile: File): DoughStatus {
-    return DoughStatus(UUID.randomUUID(), Instant.now(), imageFile.name, null)
+  suspend fun analyze(imageFile: File): AnalyzerResult {
+    return AnalyzerResult(Math.random())
   }
 }

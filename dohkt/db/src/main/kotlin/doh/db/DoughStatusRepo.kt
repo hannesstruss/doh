@@ -3,6 +3,7 @@ package doh.db
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import java.time.Instant
+import java.util.UUID
 
 class DoughStatusRepo(
   private val db: DohDatabase
@@ -15,11 +16,14 @@ class DoughStatusRepo(
     db.doughStatusQueries.getAllAfter(instant).executeAsList()
   }
 
-  suspend fun insert(status: DoughStatus) = withContext(IO) {
+  suspend fun insert(
+    backlitFilename: String,
+    ambientFilename: String
+  ) = withContext(IO) {
     db.doughStatusQueries.insert(
-      status.id,
-      status.recordedAt,
-      status.backlitImageFile
+      UUID.randomUUID(),
+      Instant.now(),
+      backlitFilename
     )
   }
 
