@@ -51,7 +51,9 @@ class SchemaManager(
 
   private fun getVersion(): Int {
     val cursor = driver.executeQuery(null, "PRAGMA user_version;", 0, null)
-    return checkNotNull(cursor.getLong(0)?.toInt()) { "user_version was null" }
+    cursor.use {
+      return checkNotNull(cursor.getLong(0)?.toInt()) { "user_version was null" }
+    }
   }
 
   private fun setVersion(version: Int) {
