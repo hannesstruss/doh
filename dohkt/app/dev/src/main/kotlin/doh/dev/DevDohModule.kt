@@ -7,7 +7,7 @@ import doh.config.ImageDir
 import doh.db.DohDatabase
 import doh.grab.Ambient
 import doh.grab.Backlight
-import doh.grab.ImageGrabber
+import doh.grab.Camera
 import doh.grab.Light
 import java.io.File
 import java.nio.file.Files
@@ -40,5 +40,5 @@ abstract class DevDohModule {
     }
   }
 
-  @Binds abstract fun imageGrabber(fakeImageGrabber: FakeImageGrabber): ImageGrabber
+  @Binds abstract fun camera(fakeCamera: FakeCamera): Camera
 }

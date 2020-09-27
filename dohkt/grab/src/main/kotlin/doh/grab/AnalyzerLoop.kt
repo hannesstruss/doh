@@ -16,8 +16,8 @@ class AnalyzerLoop(
   suspend fun run() = coroutineScope {
     while (isActive) {
       println("Analyzer running ${Instant.now().epochSecond}")
-      val image = imageGrabber.grabImage()
-      val status = analyzer.analyze(image)
+      val images = imageGrabber.grabImages()
+      val status = analyzer.analyze(images.backlitImage)
       doughStatusRepo.insert(status)
       delay(grabFrequency.toMillis())
     }

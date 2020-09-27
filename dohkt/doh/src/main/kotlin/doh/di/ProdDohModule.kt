@@ -8,11 +8,11 @@ import doh.db.DohDatabase
 import doh.db.createFilesystemDb
 import doh.grab.Ambient
 import doh.grab.Backlight
+import doh.grab.Camera
 import doh.grab.GpioLight
 import doh.grab.GpioPin
-import doh.grab.ImageGrabber
 import doh.grab.Light
-import doh.grab.PiImageGrabber
+import doh.grab.PiCamera
 import java.io.File
 import javax.inject.Singleton
 
@@ -57,5 +57,5 @@ abstract class ProdDohModule {
   }
 
   @Binds
-  abstract fun imageGrabber(piImageGrabber: PiImageGrabber): ImageGrabber
+  abstract fun camera(piCamera: PiCamera): Camera
 }
