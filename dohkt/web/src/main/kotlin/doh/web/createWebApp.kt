@@ -81,12 +81,6 @@ fun createWebApp(
               attributes["id"] = "recorded-at"
             }
           }
-          p {
-            +"Growth: "
-            span {
-              attributes["id"] = "growth"
-            }
-          }
           div {
             attributes["id"] = "time-buttons"
             button {
@@ -127,8 +121,7 @@ fun createWebApp(
                   console.log(doughStatuses[currentStatusIndex].recordedAt);
                   const status = doughStatuses[index];
                   document.querySelector("#recorded-at").innerText = status.recordedAt;
-                  document.querySelector("#growth").innerText = status.growth;
-                  document.querySelector("#dough-img").src = status.imagePath;
+                  document.querySelector("#dough-img").src = status.backlitImagePath;
                 }
                 
                 // Need more sleep

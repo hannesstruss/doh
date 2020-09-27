@@ -4,13 +4,13 @@ import java.util.UUID;
 CREATE TABLE DoughStatus (
     id TEXT AS UUID NOT NULL PRIMARY KEY,
     recordedAt INTEGER AS Instant NOT NULL,
-    imageFile TEXT NOT NULL,
-    growth REAL NOT NULL
+    backlitImageFile TEXT NOT NULL,
+    ambientImageFile TEXT
 );
 
 insert:
-INSERT INTO DoughStatus
-VALUES (?, ?, ?, ?);
+INSERT INTO DoughStatus (id, recordedAt, backlitImageFile)
+VALUES (?, ?, ?);
 
 getAll:
 SELECT * FROM DoughStatus LIMIT ?, ?;

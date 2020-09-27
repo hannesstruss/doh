@@ -10,12 +10,13 @@ fun createDb(url: String): DohDatabase {
   val schemaManager = SchemaManager(driver)
   schemaManager.createOrMigrate()
 
-  val doughStatusAdapter = DoughStatus.Adapter(
-    recordedAtAdapter = InstantAdapter,
-    idAdapter = UUIDAdapter
+  return DohDatabase(
+    driver,
+    DoughStatusAdapter = DoughStatus.Adapter(
+      recordedAtAdapter = InstantAdapter,
+      idAdapter = UUIDAdapter
+    )
   )
-
-  return DohDatabase(driver, doughStatusAdapter)
 }
 
 class SchemaManager(
@@ -34,6 +35,7 @@ class SchemaManager(
     } else {
       val latestSchemaVersion = schema.version
       if (latestSchemaVersion > currentVersion) {
+        println("Current schema: $currentVersion Latest: $latestSchemaVersion - Migrating!")
         schema.migrate(driver, currentVersion, latestSchemaVersion)
         setVersion(latestSchemaVersion)
         println("Migrated from $currentVersion to $latestSchemaVersion")
@@ -49,7 +51,9 @@ class SchemaManager(
 
   private fun getVersion(): Int {
     val cursor = driver.executeQuery(null, "PRAGMA user_version;", 0, null)
-    return checkNotNull(cursor.getLong(0)?.toInt()) { "user_version was null" }
+    cursor.use {
+      return checkNotNull(cursor.getLong(0)?.toInt()) { "user_version was null" }
+    }
   }
 
   private fun setVersion(version: Int) {
