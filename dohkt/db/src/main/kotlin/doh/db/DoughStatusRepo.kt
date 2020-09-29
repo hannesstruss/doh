@@ -23,7 +23,8 @@ class DoughStatusRepo(
     db.doughStatusQueries.insert(
       UUID.randomUUID(),
       Instant.now(),
-      backlitFilename
+      backlitFilename,
+      ambientFilename
     )
   }
 

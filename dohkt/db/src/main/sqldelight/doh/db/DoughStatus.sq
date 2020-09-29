@@ -9,8 +9,8 @@ CREATE TABLE DoughStatus (
 );
 
 insert:
-INSERT INTO DoughStatus (id, recordedAt, backlitImageFile)
-VALUES (?, ?, ?);
+INSERT INTO DoughStatus (id, recordedAt, backlitImageFile, ambientImageFile)
+VALUES (?, ?, ?, ?);
 
 getAll:
 SELECT * FROM DoughStatus LIMIT ?, ?;
