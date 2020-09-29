@@ -19,7 +19,7 @@ class FakeCamera @Inject constructor(
 
     check(!targetFile.exists()) { "You're trying to grab images too fast!" }
 
-    val resourceStream = javaClass.getResourceAsStream("/sourdough-dummy-${imageIndex + 1}.jpg")
+    val resourceStream = javaClass.getResourceAsStream("/doh/dev/sourdough-dummy-${imageIndex + 1}.jpg")
     resourceStream.use { inStream ->
       targetFile.outputStream().use { outStream ->
         inStream.copyTo(outStream)

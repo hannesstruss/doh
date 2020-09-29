@@ -6,6 +6,7 @@ include(":doh")
 include(":db")
 include(":grab")
 include(":web")
+include(":web:transport-model")
 include(":config")
 include(":frontend")
 

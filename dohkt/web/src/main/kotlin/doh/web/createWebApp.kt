@@ -2,14 +2,23 @@ package doh.web
 
 import doh.db.DoughStatusRepo
 import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.features.CORS
+import io.ktor.features.CallLogging
+import io.ktor.features.ContentNegotiation
 import io.ktor.html.respondHtml
+import io.ktor.http.HttpMethod
 import io.ktor.http.content.files
 import io.ktor.http.content.resources
 import io.ktor.http.content.static
+import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.routing
+import io.ktor.serialization.json
+import io.ktor.serialization.serialization
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.server.netty.NettyApplicationEngine
 import kotlinx.html.ScriptType
 import kotlinx.html.body
 import kotlinx.html.button
@@ -25,37 +34,59 @@ import kotlinx.html.style
 import kotlinx.html.unsafe
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.slf4j.event.Level
 import java.io.File
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
+private const val ImagesPath = "/dough-images"
+
 fun createWebApp(
   repo: DoughStatusRepo,
   imagesDir: File
-) = embeddedServer(Netty, 8080) {
-  routing {
-    get("/") {
-      val latestStatuses = repo.getAllAfter(Instant.now().minus(12, ChronoUnit.HOURS))
-        .map { DoughStatusViewModel.fromDoughStatus("/dough-images", it) }
+): NettyApplicationEngine {
+  return embeddedServer(Netty, 8080) {
+    install(ContentNegotiation) {
+      json()
+    }
 
-      call.respondHtml {
-        head {
-          meta {
-            name = "viewport"
-            content = "width=device-width, initial-scale=1"
-          }
+    install(CORS) {
+      host("localhost:8081")
+      host("doh.2e3.de:8081")
+    }
 
-          script(type = "application/json") {
-            attributes["id"] = "dough-status-json"
-            unsafe {
-              val json = Json.encodeToString(latestStatuses)
-              +json
+    install(CallLogging)
+
+    routing {
+      get("/doughstatuses") {
+        val latestStatuses = repo.getAllAfter(Instant.now().minus(12, ChronoUnit.HOURS))
+          .map { DoughStatusViewModel.fromDoughStatus(ImagesPath, it) }
+
+        call.respond(latestStatuses)
+      }
+
+      get("/") {
+        val latestStatuses = repo.getAllAfter(Instant.now().minus(12, ChronoUnit.HOURS))
+          .map { DoughStatusViewModel.fromDoughStatus(ImagesPath, it) }
+
+        call.respondHtml {
+          head {
+            meta {
+              name = "viewport"
+              content = "width=device-width, initial-scale=1"
             }
-          }
 
-          style {
-            unsafe {
-              raw("""
+            script(type = "application/json") {
+              attributes["id"] = "dough-status-json"
+              unsafe {
+                val json = Json.encodeToString(latestStatuses)
+                +json
+              }
+            }
+
+            style {
+              unsafe {
+                raw("""
                 button {
                   padding: 1em;
                   width: 4em;
@@ -67,48 +98,48 @@ fun createWebApp(
                   max-width: 100%;
                 }
               """.trimIndent())
+              }
             }
           }
-        }
-        body {
-          h1 {
-            +"Hello!"
-          }
+          body {
+            h1 {
+              +"Hello!"
+            }
 
-          p {
-            +"Recorded at: "
-            span {
-              attributes["id"] = "recorded-at"
+            p {
+              +"Recorded at: "
+              span {
+                attributes["id"] = "recorded-at"
+              }
             }
-          }
-          div {
-            attributes["id"] = "time-buttons"
-            button {
-              +"-30"
+            div {
+              attributes["id"] = "time-buttons"
+              button {
+                +"-30"
+              }
+              button {
+                +"-10"
+              }
+              button {
+                +"X"
+              }
+              button {
+                +"+10"
+              }
+              button {
+                +"+30"
+              }
             }
-            button {
-              +"-10"
+            p {
+              img {
+                attributes["id"] = "dough-img"
+              }
             }
-            button {
-              +"X"
-            }
-            button {
-              +"+10"
-            }
-            button {
-              +"+30"
-            }
-          }
-          p {
-            img {
-              attributes["id"] = "dough-img"
-            }
-          }
 
-          script(type = ScriptType.textJavaScript) {
-            unsafe {
-              raw(
-                """
+            script(type = ScriptType.textJavaScript) {
+              unsafe {
+                raw(
+                  """
                 const json = document.querySelector("#dough-status-json").innerText;
                 const doughStatuses = JSON.parse(json);
                 
@@ -154,16 +185,17 @@ fun createWebApp(
                   });
                 }
               """.trimIndent()
-              )
+                )
+              }
             }
           }
         }
       }
-    }
 
-    static("dough-images") {
-      files(imagesDir)
-      resources()
+      static("dough-images") {
+        files(imagesDir)
+        resources("doh.dev")
+      }
     }
   }
 }

@@ -17,5 +17,5 @@ dependencies {
   implementation(Deps.Dagger.dagger)
   kapt(Deps.Dagger.compiler)
 
-  implementation(Deps.Slf4jSimple)
+  implementation(Deps.logback)
 }

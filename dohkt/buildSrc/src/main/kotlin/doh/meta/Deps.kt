@@ -15,10 +15,11 @@ object Deps {
     const val serializationCore = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC"
   }
 
-  const val Slf4jSimple = "org.slf4j:slf4j-simple:1.7.30"
+  const val logback = "ch.qos.logback:logback-classic:1.2.3"
 
   object Ktor {
     const val serverNetty = "io.ktor:ktor-server-netty:${Versions.ktor}"
+    const val serialization = "io.ktor:ktor-serialization:${Versions.ktor}"
     const val htmlBuilder = "io.ktor:ktor-html-builder:${Versions.ktor}"
   }
 
