@@ -16,7 +16,7 @@ class PiCamera @Inject constructor() : Camera {
 
     val filename = "$classifier-${Instant.now().epochSecond}.jpg"
     val tempFile = directory.resolve("temp-$filename")
-    val resultFile = directory.resolve(classifier)
+    val resultFile = directory.resolve(filename)
 
     "raspistill -o ${tempFile.absolutePath}".runCmd()
     "convert ${tempFile.absolutePath} -rotate 180 -quality 50 -resize 50% ${resultFile.absolutePath}".runCmd()
