@@ -7,7 +7,8 @@ data class DoughStatusViewModel(
   val id: String,
   val recordedAt: String,
   val recordedAtEpochSeconds: Long,
-  val backlitImagePath: String
+  val backlitImagePath: String,
+  val ambientImagePath: String?
 ) {
   companion object
 }

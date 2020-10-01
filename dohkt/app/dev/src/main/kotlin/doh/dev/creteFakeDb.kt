@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 fun createFakeDb(): DohDatabase {
-  val url = JdbcSqliteDriver.IN_MEMORY + "/tmp/doh.sqlite"
+  val url = JdbcSqliteDriver.IN_MEMORY// + "/tmp/doh.sqlite"
   val db = createDb(url)
 
   for (n in 1 until 5) {
@@ -16,7 +16,7 @@ fun createFakeDb(): DohDatabase {
       UUID.randomUUID(),
       Instant.now().minus((n - 1) * 30 + 5L, ChronoUnit.MINUTES),
       "sourdough-dummy-$n.jpg",
-      "sourdough-dummy-$n.jpg",
+      "ambient-dummy-5.jpg",
     )
   }
 

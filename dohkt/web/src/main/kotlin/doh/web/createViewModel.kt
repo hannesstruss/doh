@@ -10,5 +10,6 @@ fun DoughStatusViewModel.Companion.fromDoughStatus(imagesPath: String, doughStat
   id = doughStatus.id.toString(),
   recordedAt = doughStatus.recordedAt.atZone(ZoneId.of("Europe/Berlin")).format(formatter),
   recordedAtEpochSeconds = doughStatus.recordedAt.epochSecond,
-  backlitImagePath = "$imagesPath/${doughStatus.backlitImageFile}"
+  backlitImagePath = "$imagesPath/${doughStatus.backlitImageFile}",
+  ambientImagePath = doughStatus.ambientImageFile?.let { "$imagesPath/$it" }
 )
