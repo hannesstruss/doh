@@ -7,7 +7,6 @@ import io.ktor.features.CORS
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.html.respondHtml
-import io.ktor.http.HttpMethod
 import io.ktor.http.content.files
 import io.ktor.http.content.resources
 import io.ktor.http.content.static
@@ -15,7 +14,6 @@ import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.serialization.json
-import io.ktor.serialization.serialization
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.netty.NettyApplicationEngine
@@ -34,7 +32,6 @@ import kotlinx.html.style
 import kotlinx.html.unsafe
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.slf4j.event.Level
 import java.io.File
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -196,6 +193,10 @@ fun createWebApp(
       static("dough-images") {
         files(imagesDir)
         resources("doh.dev")
+      }
+
+      static("frontend") {
+        resources("doh.frontend")
       }
     }
   }

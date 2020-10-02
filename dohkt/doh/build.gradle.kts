@@ -9,7 +9,7 @@ dependencies {
   implementation(Dagger.dagger)
   kapt(Dagger.compiler)
 
-  api(project(":web"))
+  api(project(":web:api"))
   api(project(":db"))
   api(project(":grab"))
   api(project(":config"))
