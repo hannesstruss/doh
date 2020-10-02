@@ -52,6 +52,7 @@ fun createWebApp(
 
     install(CORS) {
       host("localhost:8081")
+      host("doh.2e3.de:8080")
       host("doh.2e3.de:8081")
       host("192.168.1.28:8081")
     }
