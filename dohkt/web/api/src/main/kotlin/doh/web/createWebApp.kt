@@ -7,10 +7,13 @@ import io.ktor.features.CORS
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.html.respondHtml
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.files
+import io.ktor.http.content.resolveResource
 import io.ktor.http.content.resources
 import io.ktor.http.content.static
 import io.ktor.response.respond
+import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.serialization.json
@@ -63,7 +66,7 @@ fun createWebApp(
         call.respond(latestStatuses)
       }
 
-      get("/") {
+      get("/old") {
         val latestStatuses = repo.getAllAfter(Instant.now().minus(12, ChronoUnit.HOURS))
           .map { DoughStatusViewModel.fromDoughStatus(ImagesPath, it) }
 
@@ -195,7 +198,16 @@ fun createWebApp(
         resources("doh.dev")
       }
 
-      static("frontend") {
+      get("/") {
+        val html = call.resolveResource("index.html", "doh.frontend")
+        if (html != null) {
+          call.respond(html)
+        } else {
+          call.respondText("Not found", status = HttpStatusCode.NotFound)
+        }
+      }
+
+      static("/") {
         resources("doh.frontend")
       }
     }
