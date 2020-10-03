@@ -26,6 +26,7 @@ import styled.css
 import styled.styledButton
 import styled.styledDiv
 import styled.styledH1
+import styled.styledP
 
 private val BackendHost = "http://${window.location.hostname}:8080"
 
@@ -75,6 +76,16 @@ class App : RComponent<RProps, AppState>() {
           textAlign = TextAlign.center
         }
         +"We have ${state.doughStatuses.count()} statuses."
+      }
+      styledP {
+        css {
+          textAlign = TextAlign.center
+        }
+        state.selectedStatus?.let {
+          +it.recordedAt
+        } ?: run {
+          +"Loading"
+        }
       }
       state.selectedStatus?.let {
         styledDiv {
