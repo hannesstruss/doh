@@ -5,12 +5,14 @@ import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.css.Display
 import kotlinx.css.FlexDirection
+import kotlinx.css.FlexWrap
 import kotlinx.css.JustifyContent
 import kotlinx.css.ObjectFit
 import kotlinx.css.Overflow
 import kotlinx.css.TextAlign
 import kotlinx.css.display
 import kotlinx.css.flexDirection
+import kotlinx.css.flexWrap
 import kotlinx.css.height
 import kotlinx.css.justifyContent
 import kotlinx.css.objectFit
@@ -18,19 +20,19 @@ import kotlinx.css.overflowY
 import kotlinx.css.padding
 import kotlinx.css.pct
 import kotlinx.css.properties.add
+import kotlinx.css.properties.s
 import kotlinx.css.properties.transform
+import kotlinx.css.properties.transition
 import kotlinx.css.px
 import kotlinx.css.textAlign
-import kotlinx.css.vh
+import kotlinx.css.transition
 import kotlinx.css.width
-import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
 import react.setState
 import styled.css
-import styled.styledButton
 import styled.styledDiv
 import styled.styledH1
 import styled.styledImg
@@ -48,6 +50,12 @@ external interface AppState : RState {
 
 val AppState.selectedStatus: DoughStatusViewModel?
   get() = selectedIndex.takeIf { it >= 0 }?.let { doughStatuses.elementAt(it) }
+
+val AppState.isAtLastIndex: Boolean
+  get() = selectedIndex == doughStatuses.lastIndex
+
+val AppState.isAtFirstIndex: Boolean
+  get() = selectedIndex == 0
 
 class App : RComponent<RProps, AppState>() {
   override fun AppState.init() {
@@ -120,6 +128,10 @@ class App : RComponent<RProps, AppState>() {
             css {
               width = 100.pct
               objectFit = ObjectFit.contain
+              transition(
+                property = "transform",
+                duration = 0.25.s
+              )
 
               if (state.zoomedIn) {
                 transform {
@@ -132,36 +144,39 @@ class App : RComponent<RProps, AppState>() {
         }
         styledDiv {
           css {
-            textAlign = TextAlign.center
+            display = Display.flex
+            flexDirection = FlexDirection.row
+            flexWrap = FlexWrap.wrap
+            justifyContent = JustifyContent.spaceAround
             padding = "1em"
           }
 
-          navButton("<<") {
+          navButton("⏪") {
             setState {
               selectedIndex = maxOf(0, selectedIndex - 3)
             }
           }
-          navButton("<") {
+          navButton(if (state.isAtFirstIndex) "✋" else "👈") {
             setState {
               selectedIndex = maxOf(0, selectedIndex - 1)
             }
           }
-          navButton(if (state.zoomedIn) "-" else "+") {
+          navButton(if (state.zoomedIn) "🌍" else "🔍") {
             setState {
               zoomedIn = !zoomedIn
             }
           }
-          navButton("💡") {
+          navButton(if (state.showAmbient) "🌚" else "💡") {
             setState {
               showAmbient = !showAmbient
             }
           }
-          navButton(">") {
+          navButton(if (state.isAtLastIndex) "✋" else "👉") {
             setState {
               selectedIndex = minOf(state.doughStatuses.lastIndex, selectedIndex + 1)
             }
           }
-          navButton(">>") {
+          navButton("⏩") {
             setState {
               selectedIndex = minOf(state.doughStatuses.lastIndex, selectedIndex + 3)
             }
