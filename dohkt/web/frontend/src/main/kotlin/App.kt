@@ -127,53 +127,35 @@ class App : RComponent<RProps, AppState>() {
             padding = "1em"
           }
 
-          styledButton {
-            navButtonStyles()
-            attrs {
-              onClickFunction = {
-                setState {
-                  selectedIndex = maxOf(0, selectedIndex - 1)
-                }
-              }
-            }
-            +"<"
-          }
-          styledButton {
-            navButtonStyles()
-            attrs {
-              onClickFunction = {
-                setState {
-                  zoomedIn = !zoomedIn
-                }
-              }
-            }
-            if (state.zoomedIn) {
-              +"-"
-            } else {
-              +"+"
+          navButton("<<") {
+            setState {
+              selectedIndex = maxOf(0, selectedIndex - 3)
             }
           }
-          styledButton {
-            navButtonStyles()
-            attrs {
-              onClickFunction = {
-                setState {
-                  showAmbient = !showAmbient
-                }
-              }
+          navButton("<") {
+            setState {
+              selectedIndex = maxOf(0, selectedIndex - 1)
             }
-            +"💡"
           }
-          styledButton {
-            navButtonStyles()
-            attrs {
-              onClickFunction = {
-                setState {
-                  selectedIndex = minOf(state.doughStatuses.lastIndex, selectedIndex + 1)
-                }
-              }
+          navButton(if (state.zoomedIn) "-" else "+") {
+            setState {
+              zoomedIn = !zoomedIn
             }
-            +">"
+          }
+          navButton("💡") {
+            setState {
+              showAmbient = !showAmbient
+            }
+          }
+          navButton(">") {
+            setState {
+              selectedIndex = minOf(state.doughStatuses.lastIndex, selectedIndex + 1)
+            }
+          }
+          navButton(">>") {
+            setState {
+              selectedIndex = minOf(state.doughStatuses.lastIndex, selectedIndex + 3)
+            }
           }
         }
       }
