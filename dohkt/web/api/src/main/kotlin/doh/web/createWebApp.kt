@@ -4,10 +4,14 @@ import doh.db.DoughStatusRepo
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CORS
+import io.ktor.features.CachingHeaders
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.html.respondHtml
+import io.ktor.http.CacheControl
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.CachingOptions
 import io.ktor.http.content.files
 import io.ktor.http.content.resolveResource
 import io.ktor.http.content.resources
