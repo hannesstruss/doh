@@ -19,6 +19,7 @@ import kotlinx.css.padding
 import kotlinx.css.pct
 import kotlinx.css.properties.add
 import kotlinx.css.properties.transform
+import kotlinx.css.px
 import kotlinx.css.textAlign
 import kotlinx.css.vh
 import kotlinx.css.width
@@ -42,6 +43,7 @@ external interface AppState : RState {
   var selectedIndex: Int
   var zoomedIn: Boolean
   var showAmbient: Boolean
+  var viewportHeight: Int
 }
 
 val AppState.selectedStatus: DoughStatusViewModel?
@@ -53,9 +55,16 @@ class App : RComponent<RProps, AppState>() {
     selectedIndex = -1
     zoomedIn = false
     showAmbient = false
+    viewportHeight = window.innerHeight
   }
 
   override fun componentDidMount() {
+    window.onresize = {
+      setState {
+        viewportHeight = window.innerHeight
+      }
+    }
+
     GlobalScope.launch {
       val result: Array<DoughStatusViewModel> = window.fetch("$BackendHost/doughstatuses")
         .await()
@@ -75,7 +84,7 @@ class App : RComponent<RProps, AppState>() {
       css {
         display = Display.flex
         flexDirection = FlexDirection.column
-        height = 100.vh
+        height = state.viewportHeight.px
       }
 
       styledH1 {
