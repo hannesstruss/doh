@@ -212,6 +212,12 @@ fun createWebApp(
         }
       }
 
+      get("/siri") {
+        val latest = repo.getLatestStatus()
+        val last = latest?.recordedAt.toString()
+        call.respondText("This will work eventually. Last status from $last")
+      }
+
       static("/") {
         resources("doh.frontend")
       }
