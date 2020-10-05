@@ -3,7 +3,6 @@ import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
-import kotlinx.css.Color
 import kotlinx.css.Display
 import kotlinx.css.FlexDirection
 import kotlinx.css.FlexWrap
@@ -11,7 +10,6 @@ import kotlinx.css.JustifyContent
 import kotlinx.css.ObjectFit
 import kotlinx.css.Overflow
 import kotlinx.css.TextAlign
-import kotlinx.css.backgroundColor
 import kotlinx.css.display
 import kotlinx.css.flexDirection
 import kotlinx.css.flexWrap
@@ -27,7 +25,6 @@ import kotlinx.css.properties.transform
 import kotlinx.css.properties.transition
 import kotlinx.css.px
 import kotlinx.css.textAlign
-import kotlinx.css.transition
 import kotlinx.css.width
 import react.RBuilder
 import react.RComponent
@@ -42,10 +39,26 @@ import styled.styledP
 
 private val BackendHost = "http://${window.location.hostname}:8080"
 
+enum class ZoomLevel(
+  val cssScale: Double,
+  val cssVerticalTranslation: Int
+) {
+  Normal(1.0, 0),
+  Zoomed(2.5, -10),
+  Intense(3.5, -12);
+
+  val next: ZoomLevel
+    get() = when (this) {
+      Normal -> Zoomed
+      Zoomed -> Intense
+      Intense -> Normal
+    }
+}
+
 external interface AppState : RState {
   var doughStatuses: List<DoughStatusViewModel>
   var selectedIndex: Int
-  var zoomedIn: Boolean
+  var zoomLevel: ZoomLevel
   var showAmbient: Boolean
   var viewportHeight: Int
 }
@@ -63,7 +76,7 @@ class App : RComponent<RProps, AppState>() {
   override fun AppState.init() {
     doughStatuses = emptyList()
     selectedIndex = -1
-    zoomedIn = true
+    zoomLevel = ZoomLevel.Zoomed
     showAmbient = true
     viewportHeight = window.innerHeight
   }
@@ -135,11 +148,9 @@ class App : RComponent<RProps, AppState>() {
                 duration = 0.25.s
               )
 
-              if (state.zoomedIn) {
-                transform {
-                  add("scale", 2.5)
-                  add("translate", 0, "-10%")
-                }
+              transform {
+                add("scale", state.zoomLevel.cssScale)
+                add("translate", 0, "${state.zoomLevel.cssVerticalTranslation}%")
               }
             }
           }
@@ -167,9 +178,9 @@ class App : RComponent<RProps, AppState>() {
               selectedIndex = maxOf(0, selectedIndex - 1)
             }
           }
-          navButton(if (state.zoomedIn) "🌍" else "🔍") {
+          navButton("🔍") {
             setState {
-              zoomedIn = !zoomedIn
+              zoomLevel = zoomLevel.next
             }
           }
           navButton(if (state.showAmbient) "🌚" else "💡") {
