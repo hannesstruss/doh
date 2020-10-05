@@ -63,8 +63,8 @@ class App : RComponent<RProps, AppState>() {
   override fun AppState.init() {
     doughStatuses = emptyList()
     selectedIndex = -1
-    zoomedIn = false
-    showAmbient = false
+    zoomedIn = true
+    showAmbient = true
     viewportHeight = window.innerHeight
   }
 
