@@ -3,6 +3,7 @@ import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
+import kotlinx.css.Color
 import kotlinx.css.Display
 import kotlinx.css.FlexDirection
 import kotlinx.css.FlexWrap
@@ -10,6 +11,7 @@ import kotlinx.css.JustifyContent
 import kotlinx.css.ObjectFit
 import kotlinx.css.Overflow
 import kotlinx.css.TextAlign
+import kotlinx.css.backgroundColor
 import kotlinx.css.display
 import kotlinx.css.flexDirection
 import kotlinx.css.flexWrap
@@ -147,8 +149,12 @@ class App : RComponent<RProps, AppState>() {
             display = Display.flex
             flexDirection = FlexDirection.row
             flexWrap = FlexWrap.wrap
-            justifyContent = JustifyContent.spaceAround
             padding = "1em"
+            justifyContent = JustifyContent.center
+
+            media("screen and (max-width: 600px)") {
+              justifyContent = JustifyContent.spaceAround
+            }
           }
 
           navButton("⏪") {
