@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 scikit-image = "*"
 matplotlib = "*"
+ipdb = "*"
 
 [requires]
 python_version = "3.7"
