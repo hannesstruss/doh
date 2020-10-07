@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import skimage
-from skimage import io, img_as_float
+from skimage import io, img_as_float, draw
 import matplotlib.pyplot as plt
 from skimage.color import rgb2gray
 from skimage import color
@@ -27,10 +27,22 @@ def find_rubber_band_y(img):
     best_region_y, score = None, 0.0
     for props in regions:
         minr, minc, maxr, maxc = props.bbox
-        width = 
+        width = maxc - minc
+        height = maxr - minr
+        new_score = width / float(height)
+        if new_score > score:
+            score = new_score
+            best_region_y = int(minr + ((maxr - minr) / 2.0))
 
+    marked_img = img.copy()
 
-    return None, binary_img
+    if best_region_y:
+        print(best_region_y)
+        print(marked_img.shape)
+        rr, cc = draw.rectangle((best_region_y - 2, 0), (best_region_y + 2, marked_img.shape[1] - 1))
+        marked_img[rr, cc] = (255, 0, 0)
+
+    return best_region_y, marked_img
 
 if __name__ == "__main__":
     images_dir = "/Users/hannes/Desktop/doh-images/"
