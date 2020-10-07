@@ -34,15 +34,34 @@ def find_rubber_band_y(img):
             score = new_score
             best_region_y = int(minr + ((maxr - minr) / 2.0))
 
-    marked_img = img.copy()
+    return best_region_y
 
-    if best_region_y:
-        print(best_region_y)
-        print(marked_img.shape)
-        rr, cc = draw.rectangle((best_region_y - 2, 0), (best_region_y + 2, marked_img.shape[1] - 1))
-        marked_img[rr, cc] = (255, 0, 0)
+def find_dough_level_y(img):
+    gray_img = rgb2gray(img)
+    thresh_min = threshold(gray_img)
+    binary_img = gray_img < thresh_min
 
-    return best_region_y, marked_img
+    label_img = label(binary_img)
+    regions = regionprops(label_img)
+
+    best_region_y, biggest_area = None, 0
+    for props in regions:
+        minr, minx, maxr, maxc = props.bbox
+        area = props.bbox_area
+        if area < biggest_area:
+            continue
+
+        biggest_area = area
+        best_region_y = minr
+
+    return best_region_y, binary_img
+
+def add_horizontal_marker(img, row, color):
+    rr, cc = draw.rectangle(
+        (row - 1, 0), 
+        (row + 1, img.shape[1] - 1)
+    )
+    img[rr, cc] = color
 
 if __name__ == "__main__":
     images_dir = "/Users/hannes/Desktop/doh-images/"
@@ -51,13 +70,39 @@ if __name__ == "__main__":
     backlit_images = [images_dir + img for img in images if img.startswith("backlit-")]
     paired_images = list(zip(ambient_images, backlit_images))
 
-    index = 182
+    # Interesting indices:
+    # 112: Empty glass
 
-    ambient, backlit = paired_images[index]
+    for index in [112]:
+        ambient, backlit = paired_images[index]
 
-    backlit_img = crop(io.imread(backlit))
-    ambient_img = crop(io.imread(ambient))
-    fig, ax = plt.subplots(1, 2, figsize=(12, 8))
-    ax[0].imshow(backlit_img)
-    ax[1].imshow(find_rubber_band_y(ambient_img)[1], cmap="gray")
-    plt.show()
+        print("Index: {}, {} {}".format(index, ambient, backlit))
+
+        backlit_uncropped = io.imread(backlit)
+        backlit_img = crop(backlit_uncropped)
+        ambient_uncropped = io.imread(ambient)
+        ambient_img = crop(ambient_uncropped)
+
+        fig, ax = plt.subplots(2, 3, figsize=(12, 8))
+        ax[0][0].imshow(ambient_uncropped)
+        ax[0][1].imshow(backlit_uncropped)
+
+        ax[1][0].imshow(backlit_img)
+
+        rubber_band_row = find_rubber_band_y(ambient_img)
+        dough_level_row, dough_level_img = find_dough_level_y(backlit_img)
+
+        ax[1][1].imshow(dough_level_img, cmap="gray")
+
+        marked_img = ambient_img.copy()
+
+        if dough_level_row:
+            add_horizontal_marker(marked_img, dough_level_row, (0, 255, 0))
+
+        if rubber_band_row:
+            add_horizontal_marker(marked_img, rubber_band_row, (255, 0, 0))
+
+        add_horizontal_marker(marked_img, GLASS_BOTTOM_Y, (0, 0, 255))
+
+        ax[1][2].imshow(marked_img, cmap="gray")
+        plt.show()
