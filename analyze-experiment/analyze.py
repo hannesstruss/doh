@@ -63,29 +63,60 @@ def add_horizontal_marker(img, row, color):
     )
     img[rr, cc] = color
 
+def is_glass_present(img):
+    bottom_spot = img[880:905, 770:830]
+    value_img = color.rgb2hsv(bottom_spot)[:, :, 2]
+    binary_img = value_img > 0.5
+    raveled = binary_img.ravel()
+    result = sum(raveled) < len(raveled) / 2
+    return result, bottom_spot
+
 if __name__ == "__main__":
     images_dir = "/Users/hannes/Desktop/doh-images/"
-    images = os.listdir(images_dir)
+    images = sorted(os.listdir(images_dir))
     ambient_images = [images_dir + img for img in images if img.startswith("ambient-")]
     backlit_images = [images_dir + img for img in images if img.startswith("backlit-")]
     paired_images = list(zip(ambient_images, backlit_images))
 
     # Interesting indices:
-    # 112: Empty glass
+    # 136: Empty glass
+    # 207: Empty glass
 
-    for index in [112]:
+    index = 0
+
+    while True:
+        user_input = input("> ")
+
+        if user_input == "n":
+            index += 1
+        elif user_input == "p":
+            index -= 1
+        elif user_input == "exit":
+            break
+        else:
+            index = int(user_input)
+
         ambient, backlit = paired_images[index]
 
-        print("Index: {}, {} {}".format(index, ambient, backlit))
 
         backlit_uncropped = io.imread(backlit)
         backlit_img = crop(backlit_uncropped)
         ambient_uncropped = io.imread(ambient)
         ambient_img = crop(ambient_uncropped)
+        
+        glass_present, glass_spot = is_glass_present(backlit_uncropped)
+
+        print("Index: {} (Glass: {}), {} {}".format(
+            index, 
+            glass_present,
+            ambient, 
+            backlit
+        ))
 
         fig, ax = plt.subplots(2, 3, figsize=(12, 8))
         ax[0][0].imshow(ambient_uncropped)
         ax[0][1].imshow(backlit_uncropped)
+        ax[0][2].imshow(glass_spot)
 
         ax[1][0].imshow(backlit_img)
 
