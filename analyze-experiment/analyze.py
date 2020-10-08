@@ -64,11 +64,16 @@ def add_horizontal_marker(img, row, color):
     img[rr, cc] = color
 
 def is_glass_present(img):
+    # This area on the cardboard stand is either covered by
+    # the glass with starter or lit brightly by the backlight:
     bottom_spot = img[880:905, 770:830]
     value_img = color.rgb2hsv(bottom_spot)[:, :, 2]
+    
+    # Consider glass present if half of pixels have HSV value > 0.5:
     binary_img = value_img > 0.5
     raveled = binary_img.ravel()
     result = sum(raveled) < len(raveled) / 2
+
     return result, bottom_spot
 
 if __name__ == "__main__":
