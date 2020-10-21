@@ -1,4 +1,9 @@
+#!/usr/bin/env python
+
 import os
+import sys
+import argparse
+import json
 import numpy as np
 import skimage
 from skimage import io, img_as_float, draw
@@ -13,6 +18,17 @@ CROP_X2 = 850
 CROP_Y1 = 190
 CROP_Y2 = 950
 GLASS_BOTTOM_Y = 935 - CROP_Y1
+
+argparser = argparse.ArgumentParser(description="Read sourdough starter status.")
+subparsers = argparser.add_subparsers(help="The task you want to get done.", dest="cmd")
+
+analyze_parser = subparsers.add_parser("analyze", help="Analyze the given images.")
+analyze_parser.add_argument("--backlit", dest="backlit", help="Path to the backlit input image.")
+analyze_parser.add_argument("--ambient", dest="ambient", help="Path to the ambient input image.")
+
+debug_parser = subparsers.add_parser("debug", help="Launch the matplotlib debugger.")
+debug_parser.add_argument("--backlit", dest="backlit", help="Path to the backlit input image.")
+debug_parser.add_argument("--ambient", dest="ambient", help="Path to the ambient input image.")
 
 def crop(img):
     return img[CROP_Y1:CROP_Y2, CROP_X1:CROP_X2]
@@ -74,71 +90,78 @@ def is_glass_present(img):
     raveled = binary_img.ravel()
     result = sum(raveled) < len(raveled) / 2
 
-    return result, bottom_spot
+    return bool(result), bottom_spot
+
+def analyze_images(ambient_path, backlit_path):
+    backlit_uncropped = io.imread(backlit_path)
+    backlit_img = crop(backlit_uncropped)
+    ambient_img = crop(io.imread(ambient_path))
+
+    glass_present, glass_bottom = is_glass_present(backlit_uncropped)
+
+    if glass_present:
+        glass_data = {
+            "rubber_band_y": find_rubber_band_y(ambient_img) + CROP_Y1,
+            "glass_bottom_y": GLASS_BOTTOM_Y + CROP_Y1,
+            "dough_level_y": find_dough_level_y(backlit_img)[0] + CROP_Y1
+        }
+    else:
+        glass_data = None
+
+    return {
+        "glass_present": glass_present,
+        "glass_data": glass_data
+    }
+
+def plot_debug(ambient_path, backlit_path):
+    ambient, backlit = ambient_path, backlit_path
+
+    backlit_uncropped = io.imread(backlit)
+    backlit_img = crop(backlit_uncropped)
+    ambient_uncropped = io.imread(ambient)
+    ambient_img = crop(ambient_uncropped)
+    
+    glass_present, glass_spot = is_glass_present(backlit_uncropped)
+
+    print("Glass present: {}, {} {}".format(
+        glass_present,
+        ambient, 
+        backlit
+    ))
+
+    fig, ax = plt.subplots(2, 3, figsize=(12, 8))
+    ax[0][0].imshow(ambient_uncropped)
+    ax[0][1].imshow(backlit_uncropped)
+    ax[0][2].imshow(glass_spot)
+
+    ax[1][0].imshow(backlit_img)
+
+    rubber_band_row = find_rubber_band_y(ambient_img)
+    dough_level_row, dough_level_img = find_dough_level_y(backlit_img)
+
+    ax[1][1].imshow(dough_level_img, cmap="gray")
+
+    marked_img = ambient_img.copy()
+
+    if dough_level_row:
+        add_horizontal_marker(marked_img, dough_level_row, (0, 255, 0))
+
+    if rubber_band_row:
+        add_horizontal_marker(marked_img, rubber_band_row, (255, 0, 0))
+
+    add_horizontal_marker(marked_img, GLASS_BOTTOM_Y, (0, 0, 255))
+
+    ax[1][2].imshow(marked_img, cmap="gray")
+    plt.show()
 
 if __name__ == "__main__":
-    images_dir = "/Users/hannes/Desktop/doh-images/"
-    images = sorted(os.listdir(images_dir))
-    ambient_images = [images_dir + img for img in images if img.startswith("ambient-")]
-    backlit_images = [images_dir + img for img in images if img.startswith("backlit-")]
-    paired_images = list(zip(ambient_images, backlit_images))
-
-    # Interesting indices:
-    # 136: Empty glass
-    # 207: Empty glass
-
-    index = 0
-
-    while True:
-        user_input = input("> ")
-
-        if user_input == "n":
-            index += 1
-        elif user_input == "p":
-            index -= 1
-        elif user_input == "exit":
-            break
-        else:
-            index = int(user_input)
-
-        ambient, backlit = paired_images[index]
-
-
-        backlit_uncropped = io.imread(backlit)
-        backlit_img = crop(backlit_uncropped)
-        ambient_uncropped = io.imread(ambient)
-        ambient_img = crop(ambient_uncropped)
-        
-        glass_present, glass_spot = is_glass_present(backlit_uncropped)
-
-        print("Index: {} (Glass: {}), {} {}".format(
-            index, 
-            glass_present,
-            ambient, 
-            backlit
-        ))
-
-        fig, ax = plt.subplots(2, 3, figsize=(12, 8))
-        ax[0][0].imshow(ambient_uncropped)
-        ax[0][1].imshow(backlit_uncropped)
-        ax[0][2].imshow(glass_spot)
-
-        ax[1][0].imshow(backlit_img)
-
-        rubber_band_row = find_rubber_band_y(ambient_img)
-        dough_level_row, dough_level_img = find_dough_level_y(backlit_img)
-
-        ax[1][1].imshow(dough_level_img, cmap="gray")
-
-        marked_img = ambient_img.copy()
-
-        if dough_level_row:
-            add_horizontal_marker(marked_img, dough_level_row, (0, 255, 0))
-
-        if rubber_band_row:
-            add_horizontal_marker(marked_img, rubber_band_row, (255, 0, 0))
-
-        add_horizontal_marker(marked_img, GLASS_BOTTOM_Y, (0, 0, 255))
-
-        ax[1][2].imshow(marked_img, cmap="gray")
-        plt.show()
+    args = argparser.parse_args()
+    
+    if args.cmd == "analyze":
+        result = analyze_images(backlit_path=args.backlit, ambient_path=args.ambient)
+        json.dump(result, sys.stdout, sort_keys=True, indent=2)
+        sys.stdout.write("\n")
+    elif args.cmd == "debug":
+        plot_debug(ambient_path=args.ambient, backlit_path=args.backlit)
+    else:
+        raise Exception("Invalid command")
