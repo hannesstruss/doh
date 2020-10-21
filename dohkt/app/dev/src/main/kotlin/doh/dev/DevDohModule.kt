@@ -3,6 +3,8 @@ package doh.dev
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import doh.config.AnalyzerScriptCommand
+import doh.config.Config
 import doh.config.ImageDir
 import doh.db.DohDatabase
 import doh.grab.Ambient
@@ -38,6 +40,10 @@ abstract class DevDohModule {
     fun ambientLight(): Light {
       return FakeLight("Ambient")
     }
+
+    @Provides
+    @AnalyzerScriptCommand
+    fun analyzerScriptCommand(config: Config): String = config.analyzerScriptCommand
   }
 
   @Binds abstract fun camera(fakeCamera: FakeCamera): Camera

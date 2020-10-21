@@ -19,7 +19,10 @@ class AnalyzerLoop(
       val duration = measureTimeMillis {
         println("Analyzer running ${Instant.now().epochSecond}")
         val images = imageGrabber.grabImages()
-//      val analyzerResult = analyzer.analyze(images.backlitImage)
+      val analyzerResult = analyzer.analyze(
+        backlitFile = images.backlitImage,
+        ambientFile = images.ambientImage
+      )
         doughStatusRepo.insert(
           backlitFilename = images.backlitImage.name,
           ambientFilename = images.ambientImage.name

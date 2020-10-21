@@ -18,6 +18,7 @@ import javax.inject.Inject
 
 class DohApp @Inject constructor(
   private val imageGrabber: ImageGrabber,
+  private val analyzer: Analyzer,
   @ImageDir private val imageDir: File,
   private val repo: DoughStatusRepo,
   @Ambient private val ambientLight: Light
@@ -25,7 +26,7 @@ class DohApp @Inject constructor(
   fun run() {
     ambientLight.switch(on = false)
 
-    val analyzerLoop = AnalyzerLoop(Analyzer(), imageGrabber, repo, Duration.ofMinutes(10))
+    val analyzerLoop = AnalyzerLoop(analyzer, imageGrabber, repo, Duration.ofMinutes(10))
 
     val context = SupervisorJob()
     val scope = CoroutineScope(context)

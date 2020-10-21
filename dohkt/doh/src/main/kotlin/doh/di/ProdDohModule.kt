@@ -3,6 +3,7 @@ package doh.di
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import doh.config.AnalyzerScriptCommand
 import doh.config.ImageDir
 import doh.db.DohDatabase
 import doh.db.createFilesystemDb
@@ -54,6 +55,10 @@ abstract class ProdDohModule {
     fun ambientLight(): Light {
       return GpioLight(GpioPin(15))
     }
+
+    @Provides
+    @AnalyzerScriptCommand
+    fun analyzerScriptCommand(): String = TODO()
   }
 
   @Binds
