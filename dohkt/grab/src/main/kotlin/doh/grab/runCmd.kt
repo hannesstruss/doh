@@ -1,5 +1,6 @@
 package doh.grab
 
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -12,7 +13,7 @@ internal suspend fun String.runCmd() = coroutineScope {
   println("Running [$handle] '$cmd' as UID ${System.getProperty("user.name")}")
 
   val process = Runtime.getRuntime().exec(cmd.split(" ").toTypedArray())
-  val stdout = launch {
+  val stdout = launch(IO) {
     process.inputStream.bufferedReader().use {
       while (true) {
         val line = it.readLine() ?: break
@@ -20,7 +21,7 @@ internal suspend fun String.runCmd() = coroutineScope {
       }
     }
   }
-  val stderr = launch {
+  val stderr = launch(IO) {
     process.errorStream.bufferedReader().use {
       while (true) {
         val line = it.readLine() ?: break
