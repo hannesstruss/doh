@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+case $1 in
+  build)
+    (cd dohkt; ./gradlew :app:distZip)
+    docker build -t doh .
+    ;;
+
+  run)
+    docker run -it --rm -p 8080:8080 --name doh doh
+    ;;
+
+  bash)
+    docker run -it --entrypoint=/bin/bash doh -i
+    ;;
+esac
