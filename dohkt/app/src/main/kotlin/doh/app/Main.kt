@@ -1,23 +1,24 @@
 package doh.app
 
 import doh.DohApp
-import doh.config.Config
 import doh.dev.DevDohComponent
-import doh.di.ProdDohComponent
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.parse
-import java.io.File
+import doh.di.PiDohComponent
 
-fun main(args: Array<String>) {
-  val cfg = Json.decodeFromString<Config>(File("/etc/dohrc").readText())
+private const val EnvTypeEnvVar = "DOH_ENVTYPE"
 
-  val app: DohApp = if (args.firstOrNull() == "prod") {
-    val component = ProdDohComponent(cfg)
-    component.dohApp()
-  } else {
-    val component = DevDohComponent(cfg)
-    component.dohApp()
+fun main() {
+  val envType = System.getenv(EnvTypeEnvVar)
+
+  val app: DohApp = when (envType) {
+    "pi" -> {
+      val component = PiDohComponent()
+      component.dohApp()
+    }
+    "dev" -> {
+      val component = DevDohComponent()
+      component.dohApp()
+    }
+    else -> throw RuntimeException("'$envType' is not a valid value for $EnvTypeEnvVar")
   }
   app.run()
 }

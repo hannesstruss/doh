@@ -2,3 +2,4 @@
 *.swp
 *.pyc
 build/
+.gradle
