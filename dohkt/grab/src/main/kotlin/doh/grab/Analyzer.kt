@@ -12,8 +12,8 @@ class Analyzer
   @AnalyzerScriptCommand private val scriptCommand: String
 ) {
   suspend fun analyze(backlitFile: File, ambientFile: File): AnalyzerResult {
-    val cmd = "$scriptCommand analyze --ambient=${ambientFile.absolutePath} --backlit=${backlitFile.absolutePath}"
-    cmd.runCmd()
+//    val cmd = "$scriptCommand analyze --ambient=${ambientFile.absolutePath} --backlit=${backlitFile.absolutePath}"
+//    cmd.runCmd()
 
     return AnalyzerResult(Math.random())
   }
