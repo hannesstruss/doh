@@ -4,11 +4,4 @@ services:
     build: .
     ports:
       - "8080:8080"
-    volumes:
-      - ./devdata:/dohdata
-    environment:
-      - DOH_ENVTYPE=dev
-      - DOH_IMAGEDIR=/dohdata/dev-images
-      - DOH_ANALYZERCMD=/root/analyzer/runner.sh
-      - DOH_DATABASEPATH=/dohdata/doh-dev.sqlite
-
+    restart: always
