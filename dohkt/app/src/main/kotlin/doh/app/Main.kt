@@ -13,7 +13,7 @@ fun main(args: Array<String>) {
   val cfg = Json.decodeFromString<Config>(File("/etc/dohrc").readText())
 
   val app: DohApp = if (args.firstOrNull() == "prod") {
-    val component = ProdDohComponent()
+    val component = ProdDohComponent(cfg)
     component.dohApp()
   } else {
     val component = DevDohComponent(cfg)

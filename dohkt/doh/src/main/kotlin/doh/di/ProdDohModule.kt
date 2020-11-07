@@ -4,6 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import doh.config.AnalyzerScriptCommand
+import doh.config.Config
 import doh.config.ImageDir
 import doh.db.DohDatabase
 import doh.db.createFilesystemDb
@@ -58,7 +59,7 @@ abstract class ProdDohModule {
 
     @Provides
     @AnalyzerScriptCommand
-    fun analyzerScriptCommand(): String = TODO()
+    fun analyzerScriptCommand(config: Config): String = config.analyzerScriptCommand
   }
 
   @Binds
