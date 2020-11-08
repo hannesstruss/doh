@@ -2,15 +2,21 @@ FROM arm64v8/openjdk:15.0.1-slim-buster
 
 RUN apt-get update && apt-get install -y --no-install-recommends python3 pipenv python3-pip zip unzip
 
-COPY ./dohkt/app/build/distributions/app.zip /tmp/app.zip
-RUN mkdir -p ~/doh
-RUN unzip -d ~/doh /tmp/app.zip
+RUN useradd -m doh
+
+USER doh
+
+COPY ./dohkt/app ~/app
+
+WORKDIR ~/app
+
+RUN ./gradlew :app:distZip
 
 RUN mkdir -p ~/analyzer
-COPY ./analyze-experiment /root/analyzer
+COPY ./analyze-experiment ~/analyzer
 
-WORKDIR /root/analyzer
+WORKDIR ~/analyzer
 
 RUN pipenv install
 
-CMD ~/doh/app/bin/app
+CMD /bin/bash
