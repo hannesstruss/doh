@@ -1,6 +1,6 @@
-FROM openjdk:8
+FROM arm64v8/openjdk:15.0.1-slim-buster
 
-RUN apt-get update && apt-get install -y python3 pipenv python3-pip
+RUN apt-get update && apt-get install -y python3 pipenv python3-pip zip unzip
 
 COPY ./dohkt/app/build/distributions/app.zip /tmp/app.zip
 RUN mkdir -p ~/doh
