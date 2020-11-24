@@ -7,20 +7,22 @@ RUN useradd -m doh
 RUN ls /home
 ENV HOME /home/doh
 
-COPY ./dohkt $HOME/dohkt
+# COPY ./dohkt $HOME/dohkt
 RUN chown -R doh: $HOME
 
 WORKDIR $HOME/dohkt
 
-RUN ./gradlew :app:distZip
 USER doh
-RUN pwd
-RUN ls -l
+# RUN ./gradlew :app:distZip
 
 COPY ./analyze-experiment $HOME/analyzer
 
 WORKDIR $HOME/analyzer
 
-RUN pipenv install
+RUN uname -a
+# RUN pipenv install scikit_image-0.17.2-cp39-cp39-linux_aarch64.whl
+# RUN pipenv install
+
+USER root
 
 CMD /bin/bash
