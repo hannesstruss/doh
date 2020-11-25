@@ -16,8 +16,6 @@ COPY ./scikit_image-0.17.2-cp39-cp39-linux_x86_64.whl $SCIKIT_WHL_AMD
 ENV MATPLOTLIB_WHL_ARM=/tmp/wheels/matplotlib-3.3.3-cp39-cp39-linux_aarch64.whl
 COPY ./matplotlib-3.3.3-cp39-cp39-linux_aarch64.whl $MATPLOTLIB_WHL_ARM
 
-COPY ./requirements.txt /tmp/requirements.txt
-
 RUN python -m virtualenv /venv
 
 ENV MYPY=/venv/bin/python
@@ -32,6 +30,7 @@ RUN if [ $(uname -m) = "aarch64" ]; then $MYPY -m pip install $MATPLOTLIB_WHL_AR
 RUN if [ $(uname -m) = "x86_64" ]; then $MYPY -m pip install $SCIKIT_WHL_AMD; else echo "Not installing x86_64 wheels"; fi
 RUN rm -rf /tmp/wheels
 
+COPY ./requirements.txt /tmp/requirements.txt
 RUN $MYPY -m pip install -r /tmp/requirements.txt
 
 COPY ./app /app
