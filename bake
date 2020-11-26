@@ -1,11 +1,13 @@
 #!/bin/bash
 
+REGISTRY=doh64.local:5000
+
 set -e
 
 case $1 in
   build)
-    (cd dohkt; ./gradlew :app:distZip)
-    docker-compose build
+    (cd analyzer; docker buildx build -t $REGISTRY/doh/analyzer --push .)
+    (cd dohkt; ./gradlew :app:distZip && docker buildx build -t $REGISTRY/doh/app --push .)
     ;;
 
   run)
