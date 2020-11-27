@@ -1,6 +1,4 @@
-import json
-
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from skimage import io
 
 import analyze
@@ -17,6 +15,6 @@ def analyze_images():
         backlit_img=io.imread(request.files["backlit"].stream),
         ambient_img=io.imread(request.files["ambient"].stream)
     )
-    return json.dumps(result)
+    return jsonify(result)
 
 
