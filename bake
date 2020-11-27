@@ -6,7 +6,7 @@ set -e
 
 case $1 in
   build)
-    (cd analyzer; docker buildx build -t $REGISTRY/doh/analyzer --push .)
+    (cd analyzer; docker buildx build -t $REGISTRY/doh/analyzer --platform linux/arm64,linux/amd64 --push .)
     (cd dohkt; ./gradlew :app:distZip && docker buildx build -t $REGISTRY/doh/app --push .)
     ;;
 

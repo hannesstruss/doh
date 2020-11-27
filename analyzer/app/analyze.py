@@ -92,10 +92,10 @@ def is_glass_present(img):
 
     return bool(result), bottom_spot
 
-def analyze_images(ambient_path, backlit_path):
-    backlit_uncropped = io.imread(backlit_path)
+def analyze_images(ambient_img, backlit_img):
+    backlit_uncropped = backlit_img
     backlit_img = crop(backlit_uncropped)
-    ambient_img = crop(io.imread(ambient_path))
+    ambient_img = crop(ambient_img)
 
     glass_present, glass_bottom = is_glass_present(backlit_uncropped)
 
@@ -158,7 +158,10 @@ if __name__ == "__main__":
     args = argparser.parse_args()
     
     if args.cmd == "analyze":
-        result = analyze_images(backlit_path=args.backlit, ambient_path=args.ambient)
+        result = analyze_images(
+            backlit_img=io.imread(args.backlit),
+            ambient_img=io.imread(args.ambient)
+        )
         json.dump(result, sys.stdout, sort_keys=True, indent=2)
         sys.stdout.write("\n")
     elif args.cmd == "debug":

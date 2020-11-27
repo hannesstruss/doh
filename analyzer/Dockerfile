@@ -16,6 +16,12 @@ COPY ./scikit_image-0.17.2-cp39-cp39-linux_x86_64.whl $SCIKIT_WHL_AMD
 ENV MATPLOTLIB_WHL_ARM=/tmp/wheels/matplotlib-3.3.3-cp39-cp39-linux_aarch64.whl
 COPY ./matplotlib-3.3.3-cp39-cp39-linux_aarch64.whl $MATPLOTLIB_WHL_ARM
 
+ENV MARKUPSAFE_WHL_ARM=/tmp/wheels/MarkupSafe-1.1.1-cp39-cp39-linux_aarch64.whl
+COPY ./MarkupSafe-1.1.1-cp39-cp39-linux_aarch64.whl $MARKUPSAFE_WHL_ARM
+
+ENV MARKUPSAFE_WHL_AMD=/tmp/wheels/MarkupSafe-1.1.1-cp39-cp39-linux_x86_64.whl
+COPY ./MarkupSafe-1.1.1-cp39-cp39-linux_x86_64.whl $MARKUPSAFE_WHL_AMD
+
 RUN python -m virtualenv /venv
 
 ENV MYPY=/venv/bin/python
@@ -26,8 +32,15 @@ WORKDIR /app
 RUN $MYPY -m pip install numpy --only-binary=:all:
 
 ENV PIP_ONLY_BINARY=:all:
-RUN if [ $(uname -m) = "aarch64" ]; then $MYPY -m pip install $MATPLOTLIB_WHL_ARM $SCIKIT_WHL_ARM; else echo "Not installing ARM wheels"; fi
-RUN if [ $(uname -m) = "x86_64" ]; then $MYPY -m pip install $SCIKIT_WHL_AMD; else echo "Not installing x86_64 wheels"; fi
+RUN if [ $(uname -m) = "aarch64" ]; then $MYPY -m pip install \
+  $MATPLOTLIB_WHL_ARM \
+  $SCIKIT_WHL_ARM \
+  $MARKUPSAFE_WHL_ARM; \
+  else echo "Not installing ARM wheels"; fi
+RUN if [ $(uname -m) = "x86_64" ]; then $MYPY -m pip install \
+  $SCIKIT_WHL_AMD \
+  $MARKUPSAFE_WHL_AMD; \
+  else echo "Not installing x86_64 wheels"; fi
 RUN rm -rf /tmp/wheels
 
 COPY ./requirements.txt /tmp/requirements.txt

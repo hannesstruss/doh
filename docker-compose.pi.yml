@@ -1,5 +1,6 @@
 services:
-  doh:
+  app:
+    image: "doh64.local:5000/doh/app"
     volumes:
       - /home/pi/dohdata:/dohdata
     environment:
@@ -7,3 +8,5 @@ services:
       - DOH_IMAGEDIR=/dohdata/doh-images
       - DOH_ANALYZERCMD=/root/analyzer/runner.sh
       - DOH_DATABASEPATH=/dohdata/doh.sqlite
+  analyzer:
+    image: "doh64.local:5000/doh/analyzer"
