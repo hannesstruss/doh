@@ -4,6 +4,7 @@ from skimage import io
 import analyze
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 32 * 1024 * 1024
 
 @app.route("/")
 def hello_world():
