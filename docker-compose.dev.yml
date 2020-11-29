@@ -1,6 +1,6 @@
 services:
-  doh:
-    build: .
+  app:
+    build: dohkt
     volumes:
       - ./devdata:/dohdata
     environment:
@@ -8,3 +8,8 @@ services:
       - DOH_IMAGEDIR=/dohdata/dev-images
       - DOH_ANALYZERCMD=/root/analyzer/runner.sh
       - DOH_DATABASEPATH=/dohdata/doh-dev.sqlite
+  analyzer:
+    build: analyzer
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1

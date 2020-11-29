@@ -1,13 +1,35 @@
 #!/bin/bash
 
-REGISTRY=doh64.local:5000
+REGISTRY=doh32.local:5000
 
 set -e
 
+function build_analyzer {
+    (
+        cd analyzer
+        docker buildx build -t $REGISTRY/doh/analyzer --platform linux/arm,linux/amd64 --push .
+    )
+}
+
+function build_app {
+    (
+        cd dohkt
+        ./gradlew :app:distZip && docker buildx build -t $REGISTRY/doh/app --platform linux/arm,linux/amd64 --push .
+    )
+}
+
 case $1 in
   build)
-    (cd analyzer; docker buildx build -t $REGISTRY/doh/analyzer --platform linux/arm64,linux/amd64 --push .)
-    (cd dohkt; ./gradlew :app:distZip && docker buildx build -t $REGISTRY/doh/app --push .)
+    build_analyzer
+    build_app
+    ;;
+
+  build_analyzer)
+    build_analyzer
+    ;;
+
+  build_app)
+    build_app
     ;;
 
   run)
