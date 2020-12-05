@@ -12,4 +12,4 @@ annotation class ImageDir
 
 @Retention(AnnotationRetention.RUNTIME)
 @Qualifier
-annotation class AnalyzerScriptCommand
+annotation class AnalyzerHost

@@ -1,7 +1,9 @@
 FROM openjdk:11-jre-slim-buster
 
 RUN apt-get update -qq \
-  && apt-get install --no-install-recommends unzip \
+  && apt-get install -y --no-install-recommends \
+    unzip \
+    imagemagick \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

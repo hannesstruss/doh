@@ -2,7 +2,13 @@ FROM python:3.7-slim-buster
 
 RUN pip install -U virtualenv \
   && apt-get update -qq \
-  && apt-get install -y --no-install-recommends libgomp1 \
+  && apt-get install -y --no-install-recommends \
+    libgomp1 \
+    libatlas-base-dev \
+    libjpeg62 \
+    libopenjp2-7 \
+    libtiff5 \
+    libxcb1 \
   && rm -rf /var/lib/apt/lists/*
 
 RUN python -m virtualenv /venv

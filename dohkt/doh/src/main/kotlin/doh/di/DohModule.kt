@@ -2,7 +2,7 @@ package doh.di
 
 import dagger.Module
 import dagger.Provides
-import doh.config.AnalyzerScriptCommand
+import doh.config.AnalyzerHost
 import doh.config.ImageDir
 import doh.db.DohDatabase
 import doh.db.DoughStatusRepo
@@ -15,7 +15,7 @@ abstract class DohModule {
   companion object {
     private const val ImageDirEnvVar = "DOH_IMAGEDIR"
     private const val DatabasePathEnvVar = "DOH_DATABASEPATH"
-    private const val AnalyzerScriptCommandEnvVar = "DOH_ANALYZERCMD"
+    private const val AnalyzerHostEnvVar = "DOH_ANALYZERHOST"
 
     @Provides
     @Singleton
@@ -33,18 +33,17 @@ abstract class DohModule {
 
     @Provides
     @Singleton
+    @AnalyzerHost
+    fun analyzerHost(): String {
+      return checkNotNull(System.getenv(AnalyzerHostEnvVar)) { "$AnalyzerHostEnvVar not set" }
+    }
+
+    @Provides
+    @Singleton
     fun dohDatabase(): DohDatabase {
       val path = checkNotNull(System.getenv(DatabasePathEnvVar)) { "$DatabasePathEnvVar not set" }
       val file = File(path)
       return createFilesystemDb(file)
-    }
-
-    @Provides
-    @AnalyzerScriptCommand
-    fun analyzerScriptCommand(): String {
-      return checkNotNull(System.getenv(AnalyzerScriptCommandEnvVar)) {
-        "$AnalyzerScriptCommandEnvVar not set"
-      }
     }
 
     @Provides

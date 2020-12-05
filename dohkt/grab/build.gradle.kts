@@ -11,4 +11,6 @@ dependencies {
   implementation(project(":config"))
 
   api(Deps.Dagger.inject)
+
+  implementation(Deps.Ktor.clientCio)
 }

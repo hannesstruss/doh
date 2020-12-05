@@ -21,6 +21,7 @@ object Deps {
     const val serverNetty = "io.ktor:ktor-server-netty:${Versions.ktor}"
     const val serialization = "io.ktor:ktor-serialization:${Versions.ktor}"
     const val htmlBuilder = "io.ktor:ktor-html-builder:${Versions.ktor}"
+    const val clientCio = "io.ktor:ktor-client-cio:${Versions.ktor}"
   }
 
   object Dagger {
