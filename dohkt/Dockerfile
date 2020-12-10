@@ -1,7 +1,12 @@
-FROM openjdk:11-jre-slim-buster
+FROM debian:buster-slim
+
+# Prevent installation of openjdk-11-jre failing:
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=863199#23
+RUN mkdir -p /usr/share/man/man1
 
 RUN apt-get update -qq \
   && apt-get install -y --no-install-recommends \
+    openjdk-11-jre \
     unzip \
     imagemagick \
   && rm -rf /var/lib/apt/lists/*
