@@ -18,4 +18,7 @@ RUN unzip /tmp/app.zip -d /tmp/unzipped-app \
   && mv /tmp/unzipped-app/app/* /app \
   && rm -rf /tmp/app.zip /tmp/unzipped-app
 
+# Add raspistill to path
+ENV PATH="/opt/vc/bin:${PATH}"
+
 CMD /app/bin/app

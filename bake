@@ -1,6 +1,7 @@
 #!/bin/bash
 
-REGISTRY=doh32.local:5000
+TARGET=doh32.local
+REGISTRY=$TARGET:5000
 PLATFORMS=linux/arm,linux/amd64
 
 set -e
@@ -31,6 +32,10 @@ case $1 in
 
   build_app)
     build_app
+    ;;
+
+  deploy_compose)
+    scp docker-compose.yml docker-compose.pi.yml root@$TARGET:/doh
     ;;
 
   run)
