@@ -22,6 +22,7 @@ object Deps {
     const val serialization = "io.ktor:ktor-serialization:${Versions.ktor}"
     const val htmlBuilder = "io.ktor:ktor-html-builder:${Versions.ktor}"
     const val clientCio = "io.ktor:ktor-client-cio:${Versions.ktor}"
+    const val clientSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
   }
 
   object Dagger {

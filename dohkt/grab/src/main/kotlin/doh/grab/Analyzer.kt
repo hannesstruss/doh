@@ -2,6 +2,8 @@ package doh.grab
 
 import doh.config.AnalyzerHost
 import io.ktor.client.HttpClient
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.forms.InputProvider
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
@@ -16,7 +18,11 @@ class Analyzer
 @Inject constructor(
   @AnalyzerHost private val analyzerHost: String
 ) {
-  private val httpClient = HttpClient()
+  private val httpClient = HttpClient() {
+    install(JsonFeature) {
+      serializer = KotlinxSerializer()
+    }
+  }
   private val url = "$analyzerHost/analyze-images"
 
   suspend fun analyze(backlitFile: File, ambientFile: File): AnalyzerResult {

@@ -14,4 +14,5 @@ dependencies {
   api(Deps.Dagger.inject)
 
   implementation(Deps.Ktor.clientCio)
+  implementation(Deps.Ktor.clientSerialization)
 }
