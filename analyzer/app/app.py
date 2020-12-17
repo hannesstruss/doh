@@ -6,6 +6,10 @@ import analyze
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 32 * 1024 * 1024
 
+# @app.before_request
+# def log_request_info():
+#     app.logger.debug("Body: %s", request.get_data())
+
 @app.route("/")
 def hello_world():
     return "Hi there Brozozo!"

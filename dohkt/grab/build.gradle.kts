@@ -2,6 +2,7 @@ import doh.meta.Deps
 
 plugins {
   kotlin("jvm")
+  kotlin("plugin.serialization")
 }
 
 dependencies {
