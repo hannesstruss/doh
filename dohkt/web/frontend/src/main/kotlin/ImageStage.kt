@@ -1,15 +1,12 @@
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.css.Color
 import kotlinx.css.ObjectFit
-import kotlinx.css.backgroundColor
 import kotlinx.css.objectFit
 import kotlinx.css.properties.add
 import kotlinx.css.properties.s
 import kotlinx.css.properties.transform
 import kotlinx.css.properties.transition
-import kotlinx.css.transition
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLImageElement
@@ -96,7 +93,6 @@ class ImageStage : RComponent<ImageStageProps, ImageStageState>() {
   override fun RBuilder.render() {
     styledImg(src = state.dataUri) {
       css {
-        backgroundColor = Color.teal
         objectFit = ObjectFit.contain
 
         transition(

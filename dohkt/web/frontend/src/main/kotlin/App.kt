@@ -111,7 +111,6 @@ class App : RComponent<RProps, AppState>() {
             justifyContent = JustifyContent.center
             height = 100.pct
             overflowY = Overflow.hidden
-            backgroundColor = Color.tomato
           }
           val imgPath = if (state.showAmbient && it.ambientImagePath != null) {
             it.ambientImagePath
