@@ -71,7 +71,7 @@ class App : RComponent<RProps, AppState>() {
         .await()
         .json()
         .await()
-        .unsafeCast<Array<DoughStatusViewModel>>()
+        .unsafeCast<Array<DoughStatusViewModel>>() // TODO: can we use kotlinx.serialization?
 
       setState {
         doughStatuses = result.toList()
@@ -104,7 +104,7 @@ class App : RComponent<RProps, AppState>() {
           +"Loading"
         }
       }
-      state.selectedStatus?.let {
+      state.selectedStatus?.let { selectedStatus ->
         styledDiv {
           css {
             display = Display.flex
@@ -112,10 +112,10 @@ class App : RComponent<RProps, AppState>() {
             height = 100.pct
             overflowY = Overflow.hidden
           }
-          val imgPath = if (state.showAmbient && it.ambientImagePath != null) {
-            it.ambientImagePath
+          val imgPath = if (state.showAmbient && selectedStatus.ambientImagePath != null) {
+            selectedStatus.ambientImagePath
           } else {
-            it.backlitImagePath
+            selectedStatus.backlitImagePath
           }
           val imgUrl = imgPath?.let {
             "$BackendHost$imgPath"
@@ -123,6 +123,7 @@ class App : RComponent<RProps, AppState>() {
           imageStage {
             src = imgUrl
             zoomLevel = state.zoomLevel
+            doughData = selectedStatus.doughData
           }
         }
         styledDiv {

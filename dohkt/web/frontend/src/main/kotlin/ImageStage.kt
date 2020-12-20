@@ -1,3 +1,4 @@
+import doh.web.DoughData
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -24,6 +25,7 @@ import kotlin.coroutines.suspendCoroutine
 external interface ImageStageProps : RProps {
   var src: String?
   var zoomLevel: ZoomLevel
+  var doughData: DoughData?
 }
 
 external interface ImageStageState : RState {
@@ -49,7 +51,10 @@ enum class ZoomLevel(
 class ImageStage : RComponent<ImageStageProps, ImageStageState>() {
   private val canvas: HTMLCanvasElement = document.createElement("canvas") as HTMLCanvasElement
 
-  private suspend fun generateDataUri(src: String): String = suspendCoroutine { cont ->
+  private suspend fun generateDataUri(
+    imageUrl: String,
+    doughData: DoughData?
+  ): String = suspendCoroutine { cont ->
     val ctx = canvas.getContext("2d") as CanvasRenderingContext2D
     val img = document.createElement("img") as HTMLImageElement
     img.crossOrigin = "anonymous"
@@ -58,21 +63,33 @@ class ImageStage : RComponent<ImageStageProps, ImageStageState>() {
       canvas.width = img.width
       canvas.height = img.height
       ctx.drawImage(img, 0.0, 0.0)
-      ctx.beginPath()
-      ctx.moveTo(0.0, 0.0)
-      ctx.lineTo(img.width.toDouble(), img.height.toDouble())
-      ctx.closePath()
-      ctx.stroke()
+      ctx.lineWidth = 3.0
+
+      if (doughData != null) {
+        ctx.drawLevel("green", doughData.doughLevelY.toDouble())
+        ctx.drawLevel("blue", doughData.rubberBandY.toDouble())
+        ctx.drawLevel("red", doughData.glassBottomY.toDouble())
+      }
+
       cont.resume(canvas.toDataURL())
     }
-    img.src = src
+    img.src = imageUrl
+  }
+
+  private fun CanvasRenderingContext2D.drawLevel(color: String, y: Double) {
+    strokeStyle = color
+    beginPath()
+    moveTo(0.0, y)
+    lineTo(canvas.width.toDouble(), y)
+    closePath()
+    stroke()
   }
 
   private fun loadImage() {
     props.src?.let { src ->
       // TODO use better scope and cancel job
       GlobalScope.launch {
-        val nextDataUri = generateDataUri(src)
+        val nextDataUri = generateDataUri(src, props.doughData)
         setState {
           dataUri = nextDataUri
         }

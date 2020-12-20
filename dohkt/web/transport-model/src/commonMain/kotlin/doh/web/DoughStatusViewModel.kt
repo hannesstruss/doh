@@ -8,7 +8,15 @@ data class DoughStatusViewModel(
   val recordedAt: String,
   val recordedAtEpochSeconds: Long,
   val backlitImagePath: String,
-  val ambientImagePath: String?
+  val ambientImagePath: String?,
+  val doughData: DoughData?
 ) {
   companion object
 }
+
+@Serializable
+data class DoughData(
+  val glassBottomY: Int,
+  val rubberBandY: Int,
+  val doughLevelY: Int
+)
