@@ -1,0 +1,12 @@
+import java.util.UUID;
+
+CREATE TABLE DoughAnalysis (
+    id TEXT AS UUID NOT NULL PRIMARY KEY,
+    doughStatusId TEXT AS UUID NOT NULL,
+    glassBottomY INTEGER NOT NULL,
+    rubberBandY INTEGER NOT NULL,
+    doughLevelY INTEGER NOT NULL
+);
+
+getForDoughStatus:
+SELECT * FROM DoughAnalysis WHERE doughStatusId = ?;

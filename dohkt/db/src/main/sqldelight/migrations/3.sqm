@@ -1,0 +1,10 @@
+CREATE TABLE DoughAnalysis (
+    id TEXT NOT NULL PRIMARY KEY,
+    doughStatusId TEXT NOT NULL,
+    glassBottomY INTEGER NOT NULL,
+    rubberBandY INTEGER NOT NULL,
+    doughLevelY INTEGER NOT NULL
+);
+
+CREATE INDEX DoughAnalysis_doughStatusId
+ON DoughAnalysis (doughStatusId);

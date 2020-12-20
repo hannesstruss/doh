@@ -15,6 +15,10 @@ fun createDb(url: String): DohDatabase {
     DoughStatusAdapter = DoughStatus.Adapter(
       recordedAtAdapter = InstantAdapter,
       idAdapter = UUIDAdapter
+    ),
+    DoughAnalysisAdapter = DoughAnalysis.Adapter(
+      idAdapter = UUIDAdapter,
+      doughStatusIdAdapter = UUIDAdapter
     )
   )
 }
