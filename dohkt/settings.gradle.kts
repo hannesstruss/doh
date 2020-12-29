@@ -1,5 +1,6 @@
 rootProject.name = "doh"
 
+include(":shared")
 include(":app")
 include(":app:dev")
 include(":doh")

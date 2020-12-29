@@ -7,6 +7,8 @@ plugins {
 }
 
 dependencies {
+  implementation(project(":shared"))
+
   implementation(Deps.KotlinX.coroutinesCore)
 
   implementation(Deps.SqlDelightDriver)

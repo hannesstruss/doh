@@ -1,5 +1,6 @@
 package doh.web
 
+import doh.db.DoughAnalysisRepo
 import doh.db.DoughStatusRepo
 import io.ktor.application.call
 import io.ktor.application.install
@@ -26,7 +27,8 @@ import java.time.temporal.ChronoUnit
 private const val ImagesPath = "/dough-images"
 
 fun createWebApp(
-  repo: DoughStatusRepo,
+  doughStatusRepo: DoughStatusRepo,
+  doughAnalysisRepo: DoughAnalysisRepo,
   imagesDir: File
 ): NettyApplicationEngine {
   return embeddedServer(Netty, 8080) {
@@ -45,7 +47,7 @@ fun createWebApp(
 
     routing {
       get("/doughstatuses") {
-        val latestStatuses = repo.getAllAfter(Instant.now().minus(12, ChronoUnit.HOURS))
+        val latestStatuses = doughStatusRepo.getAllAfter(Instant.now().minus(12, ChronoUnit.HOURS))
           .map { DoughStatusViewModel.fromDoughStatus(ImagesPath, it) }
 
         call.respond(latestStatuses)
@@ -66,7 +68,7 @@ fun createWebApp(
       }
 
       get("/siri") {
-        val latest = repo.getLatestStatus()
+        val latest = doughStatusRepo.getLatestStatus()
         val last = latest?.recordedAt.toString()
         call.respondText("This will work eventually. Last status from $last")
       }

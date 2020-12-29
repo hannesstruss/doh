@@ -8,5 +8,15 @@ CREATE TABLE DoughAnalysis (
     doughLevelY INTEGER NOT NULL
 );
 
+insert:
+INSERT INTO DoughAnalysis (
+  id,
+  doughStatusId,
+  glassBottomY,
+  rubberBandY,
+  doughLevelY
+)
+VALUES (?, ?, ?, ?, ?);
+
 getForDoughStatus:
 SELECT * FROM DoughAnalysis WHERE doughStatusId = ?;

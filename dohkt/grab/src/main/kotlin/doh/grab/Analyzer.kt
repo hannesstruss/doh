@@ -1,6 +1,7 @@
 package doh.grab
 
 import doh.config.AnalyzerHost
+import doh.shared.AnalyzerResult
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
@@ -26,7 +27,7 @@ class Analyzer
   private val url = "$analyzerHost/analyze-images"
 
   suspend fun analyze(backlitFile: File, ambientFile: File): AnalyzerResult {
-    val result: AnalyzerResponse = httpClient.post(url) {
+    val response: AnalyzerResponse = httpClient.post(url) {
       body = MultiPartFormDataContent(
         formData {
           append(
@@ -49,11 +50,7 @@ class Analyzer
         }
       )
     }
-    println(result)
-
-//    val cmd = "$scriptCommand analyze --ambient=${ambientFile.absolutePath} --backlit=${backlitFile.absolutePath}"
-//    cmd.runCmd()
-
-    return AnalyzerResult.GlassNotPresent
+    println(response)
+    return AnalyzerResponse.toResult(response)
   }
 }

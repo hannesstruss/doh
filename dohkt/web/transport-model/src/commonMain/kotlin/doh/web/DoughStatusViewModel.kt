@@ -9,7 +9,7 @@ data class DoughStatusViewModel(
   val recordedAtEpochSeconds: Long,
   val backlitImagePath: String,
   val ambientImagePath: String?,
-  val doughData: DoughData?
+  val doughData: AnalyzerResult.GlassPresent?
 ) {
   companion object
 }

@@ -10,6 +10,7 @@ dependencies {
 
   implementation(project(":db"))
   implementation(project(":config"))
+  implementation(project(":shared"))
 
   api(Deps.Dagger.inject)
 

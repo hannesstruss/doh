@@ -12,6 +12,7 @@ repositories {
 dependencies {
   implementation(project(":db"))
   implementation(project(":web:transport-model"))
+  implementation(project(":shared"))
 
   api(Deps.Ktor.serverNetty)
   api(Deps.Ktor.serialization)

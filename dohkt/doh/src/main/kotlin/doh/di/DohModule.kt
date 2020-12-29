@@ -5,6 +5,7 @@ import dagger.Provides
 import doh.config.AnalyzerHost
 import doh.config.ImageDir
 import doh.db.DohDatabase
+import doh.db.DoughAnalysisRepo
 import doh.db.DoughStatusRepo
 import doh.db.createFilesystemDb
 import java.io.File
@@ -48,5 +49,8 @@ abstract class DohModule {
 
     @Provides
     fun dohStatusRepo(db: DohDatabase): DoughStatusRepo = DoughStatusRepo(db)
+
+    @Provides
+    fun doughAnalysisRepo(db: DohDatabase): DoughAnalysisRepo = DoughAnalysisRepo(db)
   }
 }
