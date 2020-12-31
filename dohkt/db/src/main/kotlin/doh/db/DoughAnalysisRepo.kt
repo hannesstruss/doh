@@ -24,4 +24,22 @@ class DoughAnalysisRepo(
   suspend fun forDoughStatus(doughStatusId: UUID): DoughAnalysis? = withContext(IO) {
     db.doughAnalysisQueries.getForDoughStatus(doughStatusId).executeAsOneOrNull()
   }
+
+  suspend fun forDoughStatuses(doughStatusIds: List<UUID>): Map<UUID, AnalyzerResult> =
+    withContext(IO) {
+      val analyses = doughStatusIds.mapNotNull { forDoughStatus(it) }
+      val result = mutableMapOf<UUID, AnalyzerResult>()
+      for (analysis in analyses) {
+        result[analysis.doughStatusId] = analysis.toAnalyzerResult()
+      }
+      result
+    }
+
+  private fun DoughAnalysis.toAnalyzerResult(): AnalyzerResult.GlassPresent {
+    return AnalyzerResult.GlassPresent(
+      rubberBandY = this.rubberBandY.toInt(),
+      glassBottomY = this.glassBottomY.toInt(),
+      doughLevelY = this.doughLevelY.toInt()
+    )
+  }
 }

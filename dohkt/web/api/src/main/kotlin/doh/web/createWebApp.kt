@@ -2,6 +2,7 @@ package doh.web
 
 import doh.db.DoughAnalysisRepo
 import doh.db.DoughStatusRepo
+import doh.shared.AnalyzerResult
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CORS
@@ -48,9 +49,17 @@ fun createWebApp(
     routing {
       get("/doughstatuses") {
         val latestStatuses = doughStatusRepo.getAllAfter(Instant.now().minus(12, ChronoUnit.HOURS))
-          .map { DoughStatusViewModel.fromDoughStatus(ImagesPath, it) }
+        val analyzerResults = doughAnalysisRepo.forDoughStatuses(latestStatuses.map { it.id })
 
-        call.respond(latestStatuses)
+        val viewModels = latestStatuses.map {
+          DoughStatusViewModel.fromDoughStatus(
+            ImagesPath,
+            it,
+            analyzerResults.get(it.id) as? AnalyzerResult.GlassPresent
+          )
+        }
+
+        call.respond(viewModels)
       }
 
       static("dough-images") {

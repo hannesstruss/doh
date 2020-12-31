@@ -1,5 +1,4 @@
 import doh.shared.AnalyzerResult
-import doh.web.DoughData
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
