@@ -1,6 +1,7 @@
 package doh.web
 
 import kotlinx.serialization.Serializable
+import doh.shared.AnalyzerResult
 
 @Serializable
 data class DoughStatusViewModel(
@@ -13,10 +14,3 @@ data class DoughStatusViewModel(
 ) {
   companion object
 }
-
-@Serializable
-data class DoughData(
-  val glassBottomY: Int,
-  val rubberBandY: Int,
-  val doughLevelY: Int
-)

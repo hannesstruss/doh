@@ -37,7 +37,8 @@ class DohApp @Inject constructor(
 
     createWebApp(
       doughStatusRepo = doughStatusRepo,
-      imagesDir = imageDir
+      imagesDir = imageDir,
+      doughAnalysisRepo = doughAnalysisRepo
     ).start(wait = true)
 
     runBlocking {

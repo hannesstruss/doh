@@ -15,6 +15,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         api(Deps.KotlinX.serializationCore)
+        api(project(":shared"))
       }
     }
   }

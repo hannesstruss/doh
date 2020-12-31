@@ -1,3 +1,4 @@
+import doh.shared.AnalyzerResult
 import doh.web.DoughData
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
@@ -25,7 +26,7 @@ import kotlin.coroutines.suspendCoroutine
 external interface ImageStageProps : RProps {
   var src: String?
   var zoomLevel: ZoomLevel
-  var doughData: DoughData?
+  var doughData: AnalyzerResult.GlassPresent?
 }
 
 external interface ImageStageState : RState {
@@ -53,7 +54,7 @@ class ImageStage : RComponent<ImageStageProps, ImageStageState>() {
 
   private suspend fun generateDataUri(
     imageUrl: String,
-    doughData: DoughData?
+    doughData: AnalyzerResult.GlassPresent?
   ): String = suspendCoroutine { cont ->
     val ctx = canvas.getContext("2d") as CanvasRenderingContext2D
     val img = document.createElement("img") as HTMLImageElement

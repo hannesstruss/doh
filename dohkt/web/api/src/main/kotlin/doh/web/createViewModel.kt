@@ -1,6 +1,7 @@
 package doh.web
 
 import doh.db.DoughStatus
+import doh.shared.AnalyzerResult
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -12,5 +13,5 @@ fun DoughStatusViewModel.Companion.fromDoughStatus(imagesPath: String, doughStat
   recordedAtEpochSeconds = doughStatus.recordedAt.epochSecond,
   backlitImagePath = "$imagesPath/${doughStatus.backlitImageFile}",
   ambientImagePath = doughStatus.ambientImageFile?.let { "$imagesPath/$it" },
-  doughData = DoughData(100, 200, 250)
+  doughData = AnalyzerResult.GlassPresent(100, 200, 400)
 )
