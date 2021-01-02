@@ -1,0 +1,29 @@
+BEGIN TRANSACTION;
+
+CREATE TEMPORARY TABLE _DoughStatus (
+    id TEXT NOT NULL PRIMARY KEY,
+    recordedAt INTEGER NOT NULL,
+    backlitImageFile TEXT NOT NULL,
+    ambientImageFile TEXT NOT NULL
+);
+
+INSERT INTO _DoughStatus
+SELECT id, recordedAt, backlitImageFile, ambientImageFile
+FROM DoughStatus
+WHERE ambientImageFile IS NOT NULL;
+
+DROP TABLE DoughStatus;
+
+CREATE TABLE DoughStatus (
+    id TEXT NOT NULL PRIMARY KEY,
+    recordedAt INTEGER NOT NULL,
+    backlitImageFile TEXT NOT NULL,
+    ambientImageFile TEXT NOT NULL
+);
+
+INSERT INTO DoughStatus
+SELECT * FROM _DoughStatus;
+
+DROP TABLE _DoughStatus;
+
+COMMIT;

@@ -8,6 +8,9 @@ CREATE TABLE DoughAnalysis (
     doughLevelY INTEGER NOT NULL
 );
 
+CREATE INDEX DoughAnalysis_doughStatusId
+ON DoughAnalysis (doughStatusId);
+
 insert:
 INSERT INTO DoughAnalysis (
   id,
