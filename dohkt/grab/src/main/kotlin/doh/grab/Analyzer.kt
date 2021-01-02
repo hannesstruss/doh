@@ -27,6 +27,9 @@ class Analyzer
   private val url = "$analyzerHost/analyze-images"
 
   suspend fun analyze(backlitFile: File, ambientFile: File): AnalyzerResult {
+    require(backlitFile.exists()) { "Backlit file doesn't exist" }
+    require(ambientFile.exists()) { "Ambient file doesn't exist" }
+
     val response: AnalyzerResponse = httpClient.post(url) {
       body = MultiPartFormDataContent(
         formData {
