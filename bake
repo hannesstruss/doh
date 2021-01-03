@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET=doh32.local
+TARGET=doh32
 REGISTRY=$TARGET:5000
 PLATFORMS=linux/arm,linux/amd64
 

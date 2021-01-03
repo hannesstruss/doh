@@ -5,3 +5,11 @@
 [registry."doh32.local:5000"]
   http = true
   insecure = true
+
+[registry."doh64:5000"]
+  http = true
+  insecure = true
+
+[registry."doh32:5000"]
+  http = true
+  insecure = true

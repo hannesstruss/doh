@@ -1,6 +1,6 @@
 services:
   app:
-    image: "doh32.local:5000/doh/app"
+    image: "doh32:5000/doh/app"
     volumes:
       - /doh/data:/dohdata
       - /opt/vc:/opt/vc
@@ -17,4 +17,4 @@ services:
       - DOH_DATABASEPATH=/dohdata/doh.sqlite
       - LD_LIBRARY_PATH=/opt/vc/lib
   analyzer:
-    image: "doh32.local:5000/doh/analyzer"
+    image: "doh32:5000/doh/analyzer"

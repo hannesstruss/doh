@@ -19,14 +19,14 @@ abstract class PiDohModule {
     @Singleton
     @Backlight
     fun backlight(): Light {
-      return GpioLight(GpioPin(1))
+      return GpioLight(GpioPin(14))
     }
 
     @Provides
     @Singleton
     @Ambient
     fun ambientLight(): Light {
-      return GpioLight(GpioPin(15))
+      return GpioLight(GpioPin(18))
     }
   }
 
