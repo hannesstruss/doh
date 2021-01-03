@@ -34,6 +34,10 @@ case $1 in
     build_app
     ;;
 
+  pull_remote)
+    ssh root@$TARGET "cd /doh; docker pull $REGISTRY/doh/app; docker pull $REGISTRY/doh/analyzer"
+    ;;
+
   deploy_compose)
     scp docker-compose.yml docker-compose.pi.yml root@$TARGET:/doh
     ;;
