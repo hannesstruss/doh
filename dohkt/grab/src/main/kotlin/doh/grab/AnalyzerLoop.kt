@@ -21,7 +21,7 @@ class AnalyzerLoop(
   suspend fun run() = coroutineScope {
     while (isActive) {
       val duration = measureTimeMillis {
-        println("${javaClass.simpleName} running ${Instant.now().epochSecond}")
+        println("${AnalyzerLoop::class.java.simpleName} running ${Instant.now().epochSecond}")
         val images = imageGrabber.grabImages()
 
         val doughStatusId = doughStatusRepo.insert(
