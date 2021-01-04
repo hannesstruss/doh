@@ -3,14 +3,12 @@ import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
-import kotlinx.css.Color
 import kotlinx.css.Display
 import kotlinx.css.FlexDirection
 import kotlinx.css.FlexWrap
 import kotlinx.css.JustifyContent
 import kotlinx.css.Overflow
 import kotlinx.css.TextAlign
-import kotlinx.css.backgroundColor
 import kotlinx.css.display
 import kotlinx.css.flexDirection
 import kotlinx.css.flexWrap
@@ -30,6 +28,7 @@ import styled.css
 import styled.styledDiv
 import styled.styledH1
 import styled.styledP
+import kotlin.math.roundToInt
 
 private val BackendHost = "http://${window.location.hostname}:8080"
 
@@ -49,6 +48,17 @@ val AppState.isAtLastIndex: Boolean
 
 val AppState.isAtFirstIndex: Boolean
   get() = selectedIndex == 0
+
+val AppState.currentGrowth: Double?
+  get() = selectedStatus?.doughData?.let { doughData ->
+    val rubberBandHeight = (doughData.glassBottomY - doughData.rubberBandY).toDouble()
+    val extraGrowth = (doughData.rubberBandY - doughData.doughLevelY).toDouble()
+    if (extraGrowth < 0) {
+      1.0
+    } else {
+      1.0 + extraGrowth / rubberBandHeight
+    }
+  }
 
 class App : RComponent<RProps, AppState>() {
   override fun AppState.init() {
@@ -99,7 +109,11 @@ class App : RComponent<RProps, AppState>() {
           textAlign = TextAlign.center
         }
         state.selectedStatus?.let {
-          +it.recordedAt
+          var subHead = it.recordedAt
+          state.currentGrowth?.let { currentGrowth ->
+            subHead += " Growth: ${(currentGrowth * 100).roundToInt()}%"
+          }
+          +subHead
         } ?: run {
           +"Loading"
         }
