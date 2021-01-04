@@ -1,5 +1,6 @@
 package doh.db
 
+import doh.db.mappers.toAnalyzerResult
 import doh.shared.AnalyzerResult
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
@@ -34,12 +35,4 @@ class DoughAnalysisRepo(
       }
       result
     }
-
-  private fun DoughAnalysis.toAnalyzerResult(): AnalyzerResult.GlassPresent {
-    return AnalyzerResult.GlassPresent(
-      rubberBandY = this.rubberBandY.toInt(),
-      glassBottomY = this.glassBottomY.toInt(),
-      doughLevelY = this.doughLevelY.toInt()
-    )
-  }
 }

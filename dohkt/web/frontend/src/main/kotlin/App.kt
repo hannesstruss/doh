@@ -1,3 +1,4 @@
+import doh.shared.growth
 import doh.web.DoughStatusViewModel
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
@@ -19,6 +20,7 @@ import kotlinx.css.padding
 import kotlinx.css.pct
 import kotlinx.css.px
 import kotlinx.css.textAlign
+import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import react.RComponent
 import react.RProps
@@ -38,6 +40,7 @@ external interface AppState : RState {
   var zoomLevel: ZoomLevel
   var showAmbient: Boolean
   var viewportHeight: Int
+  var showStatusId: Boolean
 }
 
 val AppState.selectedStatus: DoughStatusViewModel?
@@ -50,23 +53,16 @@ val AppState.isAtFirstIndex: Boolean
   get() = selectedIndex == 0
 
 val AppState.currentGrowth: Double?
-  get() = selectedStatus?.doughData?.let { doughData ->
-    val rubberBandHeight = (doughData.glassBottomY - doughData.rubberBandY).toDouble()
-    val extraGrowth = (doughData.rubberBandY - doughData.doughLevelY).toDouble()
-    if (extraGrowth < 0) {
-      1.0
-    } else {
-      1.0 + extraGrowth / rubberBandHeight
-    }
-  }
+  get() = selectedStatus?.doughData?.growth
 
 class App : RComponent<RProps, AppState>() {
   override fun AppState.init() {
     doughStatuses = emptyList()
     selectedIndex = -1
-    zoomLevel = ZoomLevel.Normal
+    zoomLevel = ZoomLevel.Zoomed
     showAmbient = true
     viewportHeight = window.innerHeight
+    showStatusId = false
   }
 
   override fun componentDidMount() {
@@ -108,6 +104,13 @@ class App : RComponent<RProps, AppState>() {
         css {
           textAlign = TextAlign.center
         }
+        attrs {
+          onClickFunction = {
+            setState {
+              showStatusId = !showStatusId
+            }
+          }
+        }
         state.selectedStatus?.let {
           var subHead = it.recordedAt
           state.currentGrowth?.let { currentGrowth ->
@@ -116,6 +119,16 @@ class App : RComponent<RProps, AppState>() {
           +subHead
         } ?: run {
           +"Loading"
+        }
+      }
+      if (state.showStatusId) {
+        state.selectedStatus?.let { selectedStatus ->
+          styledP {
+            css {
+              textAlign = TextAlign.center
+            }
+            +selectedStatus.id
+          }
         }
       }
       state.selectedStatus?.let { selectedStatus ->

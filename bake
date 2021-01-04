@@ -35,7 +35,7 @@ case $1 in
     ;;
 
   pull_remote)
-    ssh root@$TARGET "cd /doh; docker pull $REGISTRY/doh/app; docker pull $REGISTRY/doh/analyzer"
+    ssh root@$TARGET "cd /doh; docker pull $REGISTRY/doh/app; docker pull $REGISTRY/doh/analyzer; docker-compose -f docker-compose.yml -f docker-compose.pi.yml up -d"
     ;;
 
   deploy_compose)

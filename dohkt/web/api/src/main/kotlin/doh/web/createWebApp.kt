@@ -2,7 +2,9 @@ package doh.web
 
 import doh.db.DoughAnalysisRepo
 import doh.db.DoughStatusRepo
+import doh.db.mappers.toAnalyzerResult
 import doh.shared.AnalyzerResult
+import doh.shared.growth
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CORS
@@ -24,6 +26,7 @@ import io.ktor.server.netty.NettyApplicationEngine
 import java.io.File
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import kotlin.math.roundToInt
 
 private const val ImagesPath = "/dough-images"
 
@@ -77,9 +80,20 @@ fun createWebApp(
       }
 
       get("/siri") {
-        val latest = doughStatusRepo.getLatestStatus()
-        val last = latest?.recordedAt.toString()
-        call.respondText("This will work eventually. Last status from $last")
+        val latestStatus = doughStatusRepo.getLatestStatus()
+        val latestAnalysis = latestStatus?.id?.let { doughAnalysisRepo.forDoughStatus(it) }?.toAnalyzerResult()
+        val growth = latestAnalysis?.growth
+        val last = latestStatus?.recordedAt.toString()
+
+        if (latestStatus != null) {
+          var response = "Status from $last."
+          if (growth != null) {
+            response += " Growth: ${(growth * 100).roundToInt()}%"
+          }
+          call.respondText(response)
+        } else {
+          call.respondText("No Status yet!")
+        }
       }
 
       static("/") {
