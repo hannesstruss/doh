@@ -1,8 +1,13 @@
+import doh.shared.AnalyzerResult
 import doh.shared.growth
 import doh.web.DoughStatusViewModel
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.js.Js
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.request.get
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.css.Display
 import kotlinx.css.FlexDirection
@@ -56,6 +61,10 @@ val AppState.currentGrowth: Double?
   get() = selectedStatus?.doughData?.growth
 
 class App : RComponent<RProps, AppState>() {
+  val httpClient = HttpClient(Js) {
+    install(JsonFeature) { serializer = KotlinxSerializer() }
+  }
+
   override fun AppState.init() {
     doughStatuses = emptyList()
     selectedIndex = -1
@@ -73,14 +82,10 @@ class App : RComponent<RProps, AppState>() {
     }
 
     GlobalScope.launch {
-      val result: Array<DoughStatusViewModel> = window.fetch("$BackendHost/doughstatuses")
-        .await()
-        .json()
-        .await()
-        .unsafeCast<Array<DoughStatusViewModel>>() // TODO: can we use kotlinx.serialization?
+      val statuses = httpClient.get<List<DoughStatusViewModel>>("$BackendHost/doughstatuses")
 
       setState {
-        doughStatuses = result.toList()
+        doughStatuses = statuses
         selectedIndex = doughStatuses.lastIndex
       }
     }
@@ -114,7 +119,12 @@ class App : RComponent<RProps, AppState>() {
         state.selectedStatus?.let {
           var subHead = it.recordedAt
           state.currentGrowth?.let { currentGrowth ->
+            console.log("I'm updating the growth")
             subHead += " Growth: ${(currentGrowth * 100).roundToInt()}%"
+          } ?: run {
+            val dd = state.selectedStatus?.doughData!!
+            console.log("DoughData is GlassPresent: ${dd is AnalyzerResult.GlassPresent} ${dd.doughLevelY}")
+            console.log("I'm not updating the growth: ${state.selectedStatus?.doughData?.growth}")
           }
           +subHead
         } ?: run {

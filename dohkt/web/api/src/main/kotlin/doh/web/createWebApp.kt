@@ -5,6 +5,7 @@ import doh.db.DoughStatusRepo
 import doh.db.mappers.toAnalyzerResult
 import doh.shared.AnalyzerResult
 import doh.shared.growth
+import doh.web.helpers.formattedDuration
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CORS
@@ -83,10 +84,9 @@ fun createWebApp(
         val latestStatus = doughStatusRepo.getLatestStatus()
         val latestAnalysis = latestStatus?.id?.let { doughAnalysisRepo.forDoughStatus(it) }?.toAnalyzerResult()
         val growth = latestAnalysis?.growth
-        val last = latestStatus?.recordedAt.toString()
 
         if (latestStatus != null) {
-          var response = "Status from $last."
+          var response = "Status from ${latestStatus.recordedAt.formattedDuration(Instant.now())}."
           if (growth != null) {
             response += " Growth: ${(growth * 100).roundToInt()}%"
           }

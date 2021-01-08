@@ -6,13 +6,15 @@ object Versions {
 
   object KotlinX {
     const val coroutinesCore = "1.3.9"
+    const val serialization = "1.0.1"
   }
 }
 
 object Deps {
   object KotlinX {
     const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.KotlinX.coroutinesCore}"
-    const val serializationCore = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC"
+    const val serializationCore = "org.jetbrains.kotlinx:kotlinx-serialization-core:${Versions.KotlinX.serialization}"
+    const val serializationJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.KotlinX.serialization}"
   }
 
   const val logback = "ch.qos.logback:logback-classic:1.2.3"
@@ -23,6 +25,7 @@ object Deps {
     const val htmlBuilder = "io.ktor:ktor-html-builder:${Versions.ktor}"
     const val clientCio = "io.ktor:ktor-client-cio:${Versions.ktor}"
     const val clientSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
+    const val clientJsonJs = "io.ktor:ktor-client-json:${Versions.ktor}"
   }
 
   object Dagger {
