@@ -14,6 +14,7 @@ dependencies {
   implementation(project(":web:transport-model"))
   implementation(project(":shared"))
 
+  implementation(Deps.KotlinX.serializationJson)
   api(Deps.Ktor.serverNetty)
   api(Deps.Ktor.serialization)
   implementation(Deps.Ktor.htmlBuilder)

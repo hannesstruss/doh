@@ -1,7 +1,7 @@
 package doh.meta
 
 object Versions {
-  const val ktor = "1.4.0"
+  const val ktor = "1.4.2"
   const val dagger = "2.28.3"
 
   object KotlinX {
