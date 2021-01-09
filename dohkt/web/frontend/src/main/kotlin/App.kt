@@ -119,8 +119,7 @@ class App : RComponent<RProps, AppState>() {
         state.selectedStatus?.let {
           var subHead = it.recordedAt
           state.currentGrowth?.let { currentGrowth ->
-            console.log("I'm updating the growth")
-            subHead += " Growth: ${(currentGrowth * 100).roundToInt()}%"
+            subHead += ". Growth: ${(currentGrowth * 100).roundToInt()}%"
           }
           +subHead
         } ?: run {
