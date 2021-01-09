@@ -121,10 +121,6 @@ class App : RComponent<RProps, AppState>() {
           state.currentGrowth?.let { currentGrowth ->
             console.log("I'm updating the growth")
             subHead += " Growth: ${(currentGrowth * 100).roundToInt()}%"
-          } ?: run {
-            val dd = state.selectedStatus?.doughData!!
-            console.log("DoughData is GlassPresent: ${dd is AnalyzerResult.GlassPresent} ${dd.doughLevelY}")
-            console.log("I'm not updating the growth: ${state.selectedStatus?.doughData?.growth}")
           }
           +subHead
         } ?: run {
