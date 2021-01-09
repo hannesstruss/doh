@@ -1,3 +1,5 @@
+import doh.meta.Deps
+
 plugins {
   kotlin("js")
 }
@@ -13,6 +15,7 @@ repositories {
   maven("https://kotlin.bintray.com/kotlin-js-wrappers/")
 }
 
+// TODO unify deps in Deps class and update to latest versions
 dependencies {
   implementation(kotlin("stdlib-js"))
 
@@ -30,4 +33,8 @@ dependencies {
 
   //Coroutines (chapter 8)
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+
+  implementation(Deps.KotlinX.serializationJson)
+  implementation(Deps.Ktor.clientSerialization)
+  implementation(Deps.Ktor.clientJsonJs)
 }

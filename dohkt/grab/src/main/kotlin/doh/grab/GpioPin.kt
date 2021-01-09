@@ -1,20 +1,24 @@
 package doh.grab
 
-import kotlinx.coroutines.runBlocking
+import java.io.File
 
-// We use the gpio cmd as it has the sticky bit and can be run without being root.
-class GpioPin(private val id: Int) {
+class GpioPin(id: Int) {
+
+  private val exportPath = "/sys/class/gpio/export"
+  private val directionPath = "/sys/class/gpio/gpio$id/direction"
+  private val valuePath = "/sys/class/gpio/gpio$id/value"
+
+  private val valueFile = File(valuePath)
+
   init {
-    runBlocking {
-      "gpio export $id out".runCmd()
-      "gpio mode $id out".runCmd()
+    if (!valueFile.exists()) {
+      File(exportPath).writeText(id.toString())
     }
+    File(directionPath).writeText("out")
   }
 
   fun write(high: Boolean) {
     val value = if (high) "1" else "0"
-    runBlocking {
-      "gpio write $id $value".runCmd()
-    }
+    valueFile.writeText(value)
   }
 }

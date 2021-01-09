@@ -33,11 +33,15 @@ debug_parser.add_argument("--ambient", dest="ambient", help="Path to the ambient
 def crop(img):
     return img[CROP_Y1:CROP_Y2, CROP_X1:CROP_X2]
 
-def find_rubber_band_y(img):
+def rubber_band_binary_img(img):
     hsv_img = color.rgb2hsv(img)
     hue_img = hsv_img[:, :, 0]
     sat_img = hsv_img[:, :, 1]
-    binary_img = (hue_img > 0.45) & (hue_img < 0.65) & (sat_img > 0.2)
+    val_img = hsv_img[:, :, 2]
+    return (hue_img > 0.45) & (hue_img < 0.70) & (sat_img > 0.2) & (val_img > 0.5)
+
+def find_rubber_band_y(img):
+    binary_img = rubber_band_binary_img(img)
 
     regions = regionprops(label(binary_img))
     best_region_y, score = None, 0.0
@@ -72,13 +76,6 @@ def find_dough_level_y(img):
 
     return best_region_y, binary_img
 
-def add_horizontal_marker(img, row, color):
-    rr, cc = draw.rectangle(
-        (row - 1, 0), 
-        (row + 1, img.shape[1] - 1)
-    )
-    img[rr, cc] = color
-
 def is_glass_present(img):
     # This area on the cardboard stand is either covered by
     # the glass with starter or lit brightly by the backlight:
@@ -92,10 +89,10 @@ def is_glass_present(img):
 
     return bool(result), bottom_spot
 
-def analyze_images(ambient_path, backlit_path):
-    backlit_uncropped = io.imread(backlit_path)
+def analyze_images(ambient_img, backlit_img):
+    backlit_uncropped = backlit_img
     backlit_img = crop(backlit_uncropped)
-    ambient_img = crop(io.imread(ambient_path))
+    ambient_img = crop(ambient_img)
 
     glass_present, glass_bottom = is_glass_present(backlit_uncropped)
 
@@ -105,6 +102,12 @@ def analyze_images(ambient_path, backlit_path):
             "glass_bottom_y": GLASS_BOTTOM_Y + CROP_Y1,
             "dough_level_y": find_dough_level_y(backlit_img)[0] + CROP_Y1
         }
+
+        if glass_data["rubber_band_y"] > glass_data["glass_bottom_y"]:
+            raise Exception(
+                "Sanity check failed: rubber_band_y ({}) is bigger than glass_bottom_y ({})".format(
+                    glass_data["rubber_band_y"], glass_data["glass_bottom_y"]
+                ))
     else:
         glass_data = None
 
@@ -112,6 +115,13 @@ def analyze_images(ambient_path, backlit_path):
         "glass_present": glass_present,
         "glass_data": glass_data
     }
+
+def add_horizontal_marker(img, row, color):
+    rr, cc = draw.rectangle(
+        (row - 1, 0), 
+        (row + 1, img.shape[1] - 1)
+    )
+    img[rr, cc] = color
 
 def plot_debug(ambient_path, backlit_path):
     ambient, backlit = ambient_path, backlit_path
@@ -134,7 +144,8 @@ def plot_debug(ambient_path, backlit_path):
     ax[0][1].imshow(backlit_uncropped)
     ax[0][2].imshow(glass_spot)
 
-    ax[1][0].imshow(backlit_img)
+    # ax[1][0].imshow(color.rgb2hsv(ambient_img)[:, :, 2], cmap="gray")
+    ax[1][0].imshow(rubber_band_binary_img(ambient_img), cmap="gray")
 
     rubber_band_row = find_rubber_band_y(ambient_img)
     dough_level_row, dough_level_img = find_dough_level_y(backlit_img)
@@ -147,9 +158,9 @@ def plot_debug(ambient_path, backlit_path):
         add_horizontal_marker(marked_img, dough_level_row, (0, 255, 0))
 
     if rubber_band_row:
-        add_horizontal_marker(marked_img, rubber_band_row, (255, 0, 0))
+        add_horizontal_marker(marked_img, rubber_band_row, (0, 0, 255))
 
-    add_horizontal_marker(marked_img, GLASS_BOTTOM_Y, (0, 0, 255))
+    add_horizontal_marker(marked_img, GLASS_BOTTOM_Y, (255, 0, 0))
 
     ax[1][2].imshow(marked_img, cmap="gray")
     plt.show()
@@ -158,7 +169,10 @@ if __name__ == "__main__":
     args = argparser.parse_args()
     
     if args.cmd == "analyze":
-        result = analyze_images(backlit_path=args.backlit, ambient_path=args.ambient)
+        result = analyze_images(
+            backlit_img=io.imread(args.backlit),
+            ambient_img=io.imread(args.ambient)
+        )
         json.dump(result, sys.stdout, sort_keys=True, indent=2)
         sys.stdout.write("\n")
     elif args.cmd == "debug":

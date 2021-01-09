@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  app:
+    ports:
+      - "8080:8080"
+    restart: always
+  analyzer:
+    ports:
+      - "8085:8080"
+    restart: always

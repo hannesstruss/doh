@@ -1,6 +1,11 @@
 package doh.web
 
+import doh.db.DoughAnalysisRepo
 import doh.db.DoughStatusRepo
+import doh.db.mappers.toAnalyzerResult
+import doh.shared.AnalyzerResult
+import doh.shared.growth
+import doh.web.helpers.formattedDuration
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CORS
@@ -22,11 +27,13 @@ import io.ktor.server.netty.NettyApplicationEngine
 import java.io.File
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import kotlin.math.roundToInt
 
 private const val ImagesPath = "/dough-images"
 
 fun createWebApp(
-  repo: DoughStatusRepo,
+  doughStatusRepo: DoughStatusRepo,
+  doughAnalysisRepo: DoughAnalysisRepo,
   imagesDir: File
 ): NettyApplicationEngine {
   return embeddedServer(Netty, 8080) {
@@ -45,10 +52,18 @@ fun createWebApp(
 
     routing {
       get("/doughstatuses") {
-        val latestStatuses = repo.getAllAfter(Instant.now().minus(12, ChronoUnit.HOURS))
-          .map { DoughStatusViewModel.fromDoughStatus(ImagesPath, it) }
+        val latestStatuses = doughStatusRepo.getAllAfter(Instant.now().minus(12, ChronoUnit.HOURS))
+        val analyzerResults = doughAnalysisRepo.forDoughStatuses(latestStatuses.map { it.id })
 
-        call.respond(latestStatuses)
+        val viewModels = latestStatuses.map {
+          DoughStatusViewModel.fromDoughStatus(
+            ImagesPath,
+            it,
+            analyzerResults.get(it.id) as? AnalyzerResult.GlassPresent
+          )
+        }
+
+        call.respond(viewModels)
       }
 
       static("dough-images") {
@@ -66,9 +81,19 @@ fun createWebApp(
       }
 
       get("/siri") {
-        val latest = repo.getLatestStatus()
-        val last = latest?.recordedAt.toString()
-        call.respondText("This will work eventually. Last status from $last")
+        val latestStatus = doughStatusRepo.getLatestStatus()
+        val latestAnalysis = latestStatus?.id?.let { doughAnalysisRepo.forDoughStatus(it) }?.toAnalyzerResult()
+        val growth = latestAnalysis?.growth
+
+        if (latestStatus != null) {
+          var response = "Status from ${latestStatus.recordedAt.formattedDuration(Instant.now())}."
+          if (growth != null) {
+            response += " Growth: ${(growth * 100).roundToInt()}%"
+          }
+          call.respondText(response)
+        } else {
+          call.respondText("No Status yet!")
+        }
       }
 
       static("/") {

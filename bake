@@ -1,0 +1,48 @@
+#!/bin/bash
+
+TARGET=doh32
+REGISTRY=$TARGET:5000
+PLATFORMS=linux/arm,linux/amd64
+
+set -e
+
+function build_analyzer {
+    (
+        cd analyzer
+        docker buildx build -t $REGISTRY/doh/analyzer --platform $PLATFORMS --push .
+    )
+}
+
+function build_app {
+    (
+        cd dohkt
+        ./gradlew :app:distZip && docker buildx build -t $REGISTRY/doh/app --platform $PLATFORMS --push .
+    )
+}
+
+case $1 in
+  build)
+    build_analyzer
+    build_app
+    ;;
+
+  build_analyzer)
+    build_analyzer
+    ;;
+
+  build_app)
+    build_app
+    ;;
+
+  pull_remote)
+    ssh root@$TARGET "cd /doh; docker pull $REGISTRY/doh/app; docker pull $REGISTRY/doh/analyzer; docker-compose -f docker-compose.yml -f docker-compose.pi.yml up -d"
+    ;;
+
+  deploy_compose)
+    scp docker-compose.yml docker-compose.pi.yml root@$TARGET:/doh
+    ;;
+
+  run)
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+    ;;
+esac

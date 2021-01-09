@@ -5,7 +5,7 @@ CREATE TABLE DoughStatus (
     id TEXT AS UUID NOT NULL PRIMARY KEY,
     recordedAt INTEGER AS Instant NOT NULL,
     backlitImageFile TEXT NOT NULL,
-    ambientImageFile TEXT
+    ambientImageFile TEXT NOT NULL
 );
 
 insert:

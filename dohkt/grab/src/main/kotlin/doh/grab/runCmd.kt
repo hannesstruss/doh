@@ -10,7 +10,7 @@ internal suspend fun String.runCmd() = coroutineScope {
   val cmd: String = this@runCmd
 
   val handle = (Math.random() * 10000).roundToInt()
-  println("Running [$handle] '$cmd' as UID ${System.getProperty("user.name")}")
+//  println("Running [$handle] '$cmd' as UID ${System.getProperty("user.name")}")
 
   val process = Runtime.getRuntime().exec(cmd.split(" ").toTypedArray())
   val stdout = launch(IO) {
@@ -30,7 +30,7 @@ internal suspend fun String.runCmd() = coroutineScope {
     }
   }
   val resultCode = process.waitFor()
-  println("[$handle] exited with $resultCode")
+//  println("[$handle] exited with $resultCode")
   stdout.join()
   stderr.join()
 

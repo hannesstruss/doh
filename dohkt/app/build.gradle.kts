@@ -7,7 +7,10 @@ plugins {
 }
 
 application {
-  mainClassName = "doh.app.MainKt"
+  mainClass.set("doh.app.MainKt")
+  applicationDefaultJvmArgs = listOf(
+    "-Dkotlinx.coroutines.debug=on"
+  )
 }
 
 dependencies {

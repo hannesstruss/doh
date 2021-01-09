@@ -19,13 +19,15 @@ class DoughStatusRepo(
   suspend fun insert(
     backlitFilename: String,
     ambientFilename: String
-  ) = withContext(IO) {
+  ): UUID = withContext(IO) {
+    val id = UUID.randomUUID()
     db.doughStatusQueries.insert(
-      UUID.randomUUID(),
+      id,
       Instant.now(),
       backlitFilename,
       ambientFilename
     )
+    id
   }
 
   suspend fun getLatestStatus(): DoughStatus? = withContext(IO) {

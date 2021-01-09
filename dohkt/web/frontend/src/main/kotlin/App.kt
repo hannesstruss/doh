@@ -1,13 +1,18 @@
+import doh.shared.AnalyzerResult
+import doh.shared.growth
 import doh.web.DoughStatusViewModel
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.js.Js
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.request.get
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.css.Display
 import kotlinx.css.FlexDirection
 import kotlinx.css.FlexWrap
 import kotlinx.css.JustifyContent
-import kotlinx.css.ObjectFit
 import kotlinx.css.Overflow
 import kotlinx.css.TextAlign
 import kotlinx.css.display
@@ -15,17 +20,12 @@ import kotlinx.css.flexDirection
 import kotlinx.css.flexWrap
 import kotlinx.css.height
 import kotlinx.css.justifyContent
-import kotlinx.css.objectFit
 import kotlinx.css.overflowY
 import kotlinx.css.padding
 import kotlinx.css.pct
-import kotlinx.css.properties.add
-import kotlinx.css.properties.s
-import kotlinx.css.properties.transform
-import kotlinx.css.properties.transition
 import kotlinx.css.px
 import kotlinx.css.textAlign
-import kotlinx.css.width
+import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import react.RComponent
 import react.RProps
@@ -34,26 +34,10 @@ import react.setState
 import styled.css
 import styled.styledDiv
 import styled.styledH1
-import styled.styledImg
 import styled.styledP
+import kotlin.math.roundToInt
 
 private val BackendHost = "http://${window.location.hostname}:8080"
-
-enum class ZoomLevel(
-  val cssScale: Double,
-  val cssVerticalTranslation: Int
-) {
-  Normal(1.0, 0),
-  Zoomed(2.5, -10),
-  Intense(3.5, -12);
-
-  val next: ZoomLevel
-    get() = when (this) {
-      Normal -> Zoomed
-      Zoomed -> Intense
-      Intense -> Normal
-    }
-}
 
 external interface AppState : RState {
   var doughStatuses: List<DoughStatusViewModel>
@@ -61,6 +45,7 @@ external interface AppState : RState {
   var zoomLevel: ZoomLevel
   var showAmbient: Boolean
   var viewportHeight: Int
+  var showStatusId: Boolean
 }
 
 val AppState.selectedStatus: DoughStatusViewModel?
@@ -72,13 +57,21 @@ val AppState.isAtLastIndex: Boolean
 val AppState.isAtFirstIndex: Boolean
   get() = selectedIndex == 0
 
+val AppState.currentGrowth: Double?
+  get() = selectedStatus?.doughData?.growth
+
 class App : RComponent<RProps, AppState>() {
+  val httpClient = HttpClient(Js) {
+    install(JsonFeature) { serializer = KotlinxSerializer() }
+  }
+
   override fun AppState.init() {
     doughStatuses = emptyList()
     selectedIndex = -1
     zoomLevel = ZoomLevel.Zoomed
     showAmbient = true
     viewportHeight = window.innerHeight
+    showStatusId = false
   }
 
   override fun componentDidMount() {
@@ -89,14 +82,10 @@ class App : RComponent<RProps, AppState>() {
     }
 
     GlobalScope.launch {
-      val result: Array<DoughStatusViewModel> = window.fetch("$BackendHost/doughstatuses")
-        .await()
-        .json()
-        .await()
-        .unsafeCast<Array<DoughStatusViewModel>>()
+      val statuses = httpClient.get<List<DoughStatusViewModel>>("$BackendHost/doughstatuses")
 
       setState {
-        doughStatuses = result.toList()
+        doughStatuses = statuses
         selectedIndex = doughStatuses.lastIndex
       }
     }
@@ -120,13 +109,34 @@ class App : RComponent<RProps, AppState>() {
         css {
           textAlign = TextAlign.center
         }
+        attrs {
+          onClickFunction = {
+            setState {
+              showStatusId = !showStatusId
+            }
+          }
+        }
         state.selectedStatus?.let {
-          +it.recordedAt
+          var subHead = it.recordedAt
+          state.currentGrowth?.let { currentGrowth ->
+            subHead += ". Growth: ${(currentGrowth * 100).roundToInt()}%"
+          }
+          +subHead
         } ?: run {
           +"Loading"
         }
       }
-      state.selectedStatus?.let {
+      if (state.showStatusId) {
+        state.selectedStatus?.let { selectedStatus ->
+          styledP {
+            css {
+              textAlign = TextAlign.center
+            }
+            +selectedStatus.id
+          }
+        }
+      }
+      state.selectedStatus?.let { selectedStatus ->
         styledDiv {
           css {
             display = Display.flex
@@ -134,25 +144,18 @@ class App : RComponent<RProps, AppState>() {
             height = 100.pct
             overflowY = Overflow.hidden
           }
-          val imgPath = if (state.showAmbient && it.ambientImagePath != null) {
-            it.ambientImagePath
+          val imgPath = if (state.showAmbient && selectedStatus.ambientImagePath != null) {
+            selectedStatus.ambientImagePath
           } else {
-            it.backlitImagePath
+            selectedStatus.backlitImagePath
           }
-          styledImg(src = BackendHost + imgPath) {
-            css {
-              width = 100.pct
-              objectFit = ObjectFit.contain
-              transition(
-                property = "transform",
-                duration = 0.25.s
-              )
-
-              transform {
-                add("scale", state.zoomLevel.cssScale)
-                add("translate", 0, "${state.zoomLevel.cssVerticalTranslation}%")
-              }
-            }
+          val imgUrl = imgPath?.let {
+            "$BackendHost$imgPath"
+          }
+          imageStage {
+            src = imgUrl
+            zoomLevel = state.zoomLevel
+            doughData = selectedStatus.doughData
           }
         }
         styledDiv {

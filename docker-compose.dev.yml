@@ -1,0 +1,16 @@
+services:
+  app:
+    build: dohkt
+    volumes:
+      - ./devdata:/dohdata
+    environment:
+      - DOH_ENVTYPE=dev
+      - DOH_IMAGEDIR=/dohdata/dev-images
+      - DOH_DATABASEPATH=/dohdata/doh-dev.sqlite
+  analyzer:
+    build: analyzer
+    volumes:
+      - ./analyzer/app:/app
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
