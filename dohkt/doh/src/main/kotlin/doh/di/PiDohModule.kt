@@ -10,6 +10,8 @@ import doh.grab.GpioLight
 import doh.grab.GpioPin
 import doh.grab.Light
 import doh.grab.PiCamera
+import doh.temperature.PiTempSensor
+import doh.temperature.TempSensor
 import javax.inject.Singleton
 
 @Module
@@ -32,4 +34,7 @@ abstract class PiDohModule {
 
   @Binds
   abstract fun camera(piCamera: PiCamera): Camera
+
+  @Binds
+  abstract fun tempSensor(piTempSensor: PiTempSensor): TempSensor
 }

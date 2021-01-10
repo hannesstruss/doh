@@ -2,6 +2,7 @@ package doh.web
 
 import doh.db.DoughAnalysisRepo
 import doh.db.DoughStatusRepo
+import doh.db.TemperatureReadingRepo
 import doh.db.mappers.toAnalyzerResult
 import doh.shared.AnalyzerResult
 import doh.shared.growth
@@ -34,6 +35,7 @@ private const val ImagesPath = "/dough-images"
 fun createWebApp(
   doughStatusRepo: DoughStatusRepo,
   doughAnalysisRepo: DoughAnalysisRepo,
+  temperatureReadingRepo: TemperatureReadingRepo,
   imagesDir: File
 ): NettyApplicationEngine {
   return embeddedServer(Netty, 8080) {
@@ -64,6 +66,11 @@ fun createWebApp(
         }
 
         call.respond(viewModels)
+      }
+
+      get("/ambient-temperature") {
+        val latestTemp = temperatureReadingRepo.getLatest()
+        call.respond(AmbientTemperature(latestTemp))
       }
 
       static("dough-images") {

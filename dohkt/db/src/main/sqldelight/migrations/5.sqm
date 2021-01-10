@@ -1,0 +1,5 @@
+CREATE TABLE TemperatureReading (
+    id TEXT NOT NULL PRIMARY KEY,
+    measuredAt INTEGER NOT NULL,
+    centigrades REAL NOT NULL
+);

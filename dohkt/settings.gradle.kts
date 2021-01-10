@@ -11,6 +11,7 @@ include(":web:api")
 include(":web:frontend")
 include(":web:transport-model")
 include(":config")
+include(":temperature")
 
 pluginManagement {
   resolutionStrategy {

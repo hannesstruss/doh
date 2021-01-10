@@ -1,0 +1,17 @@
+import java.time.Instant;
+import java.util.UUID;
+
+CREATE TABLE TemperatureReading (
+    id TEXT AS UUID NOT NULL PRIMARY KEY,
+    measuredAt INTEGER AS Instant NOT NULL,
+    centigrades REAL NOT NULL
+);
+
+insert:
+INSERT INTO TemperatureReading (id, measuredAt, centigrades)
+VALUES (?, ?, ?);
+
+getLatest:
+SELECT * FROM TemperatureReading
+ORDER BY measuredAt DESC
+LIMIT 1;

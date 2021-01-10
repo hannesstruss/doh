@@ -7,6 +7,8 @@ import doh.grab.Ambient
 import doh.grab.Backlight
 import doh.grab.Camera
 import doh.grab.Light
+import doh.temperature.FakeTempSensor
+import doh.temperature.TempSensor
 import javax.inject.Singleton
 
 @Module
@@ -28,4 +30,6 @@ abstract class DevDohModule {
   }
 
   @Binds abstract fun camera(fakeCamera: FakeCamera): Camera
+
+  @Binds abstract fun tempSensor(fakeTempSensor: FakeTempSensor): TempSensor
 }

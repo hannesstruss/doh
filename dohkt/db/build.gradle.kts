@@ -10,6 +10,7 @@ dependencies {
   implementation(project(":shared"))
 
   implementation(Deps.KotlinX.coroutinesCore)
+  implementation(Deps.Dagger.inject)
 
   implementation(Deps.SqlDelightDriver)
 }

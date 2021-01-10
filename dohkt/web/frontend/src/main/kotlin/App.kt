@@ -1,5 +1,6 @@
 import doh.shared.AnalyzerResult
 import doh.shared.growth
+import doh.web.AmbientTemperature
 import doh.web.DoughStatusViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.js.Js
@@ -46,6 +47,7 @@ external interface AppState : RState {
   var showAmbient: Boolean
   var viewportHeight: Int
   var showStatusId: Boolean
+  var ambientTemperature: Double?
 }
 
 val AppState.selectedStatus: DoughStatusViewModel?
@@ -88,6 +90,12 @@ class App : RComponent<RProps, AppState>() {
         doughStatuses = statuses
         selectedIndex = doughStatuses.lastIndex
       }
+
+      val temperature = httpClient.get<AmbientTemperature>("$BackendHost/ambient-temperature")
+
+      setState {
+        ambientTemperature = temperature.centigrades
+      }
     }
   }
 
@@ -119,7 +127,10 @@ class App : RComponent<RProps, AppState>() {
         state.selectedStatus?.let {
           var subHead = it.recordedAt
           state.currentGrowth?.let { currentGrowth ->
-            subHead += ". Growth: ${(currentGrowth * 100).roundToInt()}%"
+            subHead += " - Growth: ${(currentGrowth * 100).roundToInt()}%"
+          }
+          state.ambientTemperature?.let { ambientTemp ->
+            subHead += " - Temp: ${ambientTemp.toFixed(1)}ºC"
           }
           +subHead
         } ?: run {
