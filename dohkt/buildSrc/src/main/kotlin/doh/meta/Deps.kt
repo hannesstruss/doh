@@ -35,4 +35,8 @@ object Deps {
   }
 
   const val SqlDelightDriver = "com.squareup.sqldelight:sqlite-driver:1.4.1"
+
+  object Testing {
+
+  }
 }

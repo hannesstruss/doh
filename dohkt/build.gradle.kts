@@ -9,7 +9,7 @@ buildscript {
 }
 
 plugins {
-  kotlin("jvm") version "1.4.0" apply false
+  kotlin("jvm") version "1.4.21" apply false
   kotlin("plugin.serialization") version "1.4.0" apply false
   id("com.squareup.sqldelight") version "1.4.1" apply false
 }
@@ -31,16 +31,3 @@ subprojects {
 group = "org.example"
 version = "0.1-SNAPSHOT"
 
-tasks.register("deployToPi") {
-  group = "deploy"
-  dependsOn(":app:distZip")
-  doLast {
-    exec {
-      standardOutput = System.out
-      val distZipProvider = project(":app").tasks.named<Zip>("distZip")
-      val archivePath = distZipProvider.get().archiveFile.get().asFile.absolutePath
-
-      commandLine = listOf("bash", "gradle/deploypi.sh", archivePath)
-    }
-  }
-}

@@ -7,6 +7,9 @@ services:
       - type: bind
         source: /sys
         target: /sys
+      - type: bind
+        source: /sys/bus/w1/devices/28-000008d8f10f
+        target: /tempsensor
     devices:
       - /dev/vchiq
       - /dev/vcsm

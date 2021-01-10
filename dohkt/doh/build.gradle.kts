@@ -13,4 +13,5 @@ dependencies {
   api(project(":db"))
   api(project(":grab"))
   api(project(":config"))
+  api(project(":temperature"))
 }
