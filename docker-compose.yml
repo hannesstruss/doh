@@ -4,7 +4,16 @@ services:
     ports:
       - "8080:8080"
     restart: always
+    environment:
+      - DOH_ANALYZERHOST=http://analyzer:8080
   analyzer:
     ports:
       - "8085:8080"
     restart: always
+  grafana:
+    image: "grafana/grafana:7.3.6"
+    ports:
+      - "8086:3000"
+  prometheus:
+    ports:
+      - "8087:9090"

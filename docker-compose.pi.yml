@@ -16,7 +16,6 @@ services:
     environment:
       - DOH_ENVTYPE=pi
       - DOH_IMAGEDIR=/dohdata/doh-images
-      - DOH_ANALYZERHOST=http://analyzer:8080
       - DOH_DATABASEPATH=/dohdata/doh.sqlite
       - LD_LIBRARY_PATH=/opt/vc/lib
   analyzer:

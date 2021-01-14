@@ -1,4 +1,6 @@
-from flask import Flask, request, jsonify
+import random
+
+from flask import Flask, request, Response, jsonify
 from skimage import io
 
 import analyze
@@ -22,4 +24,10 @@ def analyze_images():
     )
     return jsonify(result)
 
-
+@app.route("/metrics")
+def metrics():
+    return Response((
+        "# HELP frobulation It frobulates.\n"
+        "# TYPE frobulation gauge\n"
+        "frobulation {}\n".format(random.gauss(100, 20))
+        ), mimetype="text/plain")
