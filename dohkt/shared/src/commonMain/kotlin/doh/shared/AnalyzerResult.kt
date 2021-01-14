@@ -19,7 +19,7 @@ val AnalyzerResult.growth: Double?
       val rubberBandHeight = (glassBottomY - rubberBandY).toDouble()
       val extraGrowth = (rubberBandY - doughLevelY).toDouble()
       if (extraGrowth < 0) {
-        1.0
+        null
       } else {
         1.0 + extraGrowth / rubberBandHeight
       }
