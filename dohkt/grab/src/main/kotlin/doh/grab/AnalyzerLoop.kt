@@ -9,15 +9,18 @@ import kotlinx.coroutines.isActive
 import java.time.Duration
 import java.time.Instant
 import java.util.UUID
+import javax.inject.Inject
 import kotlin.system.measureTimeMillis
 
-class AnalyzerLoop(
+class AnalyzerLoop
+@Inject constructor(
   private val analyzer: Analyzer,
   private val imageGrabber: ImageGrabber,
   private val doughStatusRepo: DoughStatusRepo,
   private val doughAnalysisRepo: DoughAnalysisRepo,
-  private val grabFrequency: Duration
 ) {
+  private val grabFrequency = Duration.ofMinutes(10)
+
   suspend fun run() = coroutineScope {
     while (isActive) {
       val duration = measureTimeMillis {

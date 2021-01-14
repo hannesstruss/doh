@@ -16,8 +16,9 @@ services:
     environment:
       - DOH_ENVTYPE=pi
       - DOH_IMAGEDIR=/dohdata/doh-images
-      - DOH_ANALYZERHOST=http://analyzer:8080
       - DOH_DATABASEPATH=/dohdata/doh.sqlite
       - LD_LIBRARY_PATH=/opt/vc/lib
   analyzer:
     image: "doh32:5000/doh/analyzer"
+  prometheus:
+    image: "doh32:5000/doh/prometheus"

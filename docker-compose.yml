@@ -4,7 +4,16 @@ services:
     ports:
       - "8080:8080"
     restart: always
+    environment:
+      - DOH_ANALYZERHOST=http://analyzer:8080
   analyzer:
     ports:
       - "8085:8080"
     restart: always
+  prometheus:
+    ports:
+      - "8087:9090"
+    volumes:
+      - "prometheus_data:/prometheus"
+volumes:
+  prometheus_data: {}
