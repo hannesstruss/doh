@@ -20,3 +20,5 @@ services:
       - LD_LIBRARY_PATH=/opt/vc/lib
   analyzer:
     image: "doh32:5000/doh/analyzer"
+  prometheus:
+    image: "doh32:5000/doh/prometheus"

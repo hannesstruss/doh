@@ -20,10 +20,18 @@ function build_app {
     )
 }
 
+function build_prometheus {
+    (
+        cd prometheus
+        docker buildx build -t $REGISTRY/doh/prometheus --platform $PLATFORMS --push .
+    )
+}
+
 case $1 in
   build)
     build_analyzer
     build_app
+    build_prometheus
     ;;
 
   build_analyzer)
@@ -34,8 +42,12 @@ case $1 in
     build_app
     ;;
 
+  build_prometheus)
+    build_prometheus
+    ;;
+
   pull_remote)
-    ssh root@$TARGET "cd /doh; docker pull $REGISTRY/doh/app; docker pull $REGISTRY/doh/analyzer; docker-compose -f docker-compose.yml -f docker-compose.pi.yml up -d"
+    ssh root@$TARGET "cd /doh; docker pull $REGISTRY/doh/app; docker pull $REGISTRY/doh/analyzer; docker pull $REGISTRY/doh/prometheus; docker-compose -f docker-compose.yml -f docker-compose.pi.yml up -d"
     ;;
 
   deploy_compose)

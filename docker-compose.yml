@@ -10,10 +10,10 @@ services:
     ports:
       - "8085:8080"
     restart: always
-  grafana:
-    image: "grafana/grafana:7.3.6"
-    ports:
-      - "8086:3000"
   prometheus:
     ports:
       - "8087:9090"
+    volumes:
+      - "prometheus_data:/prometheus"
+volumes:
+  prometheus_data: {}

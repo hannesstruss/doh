@@ -83,6 +83,14 @@ class DohWebApp
         get("/metrics") {
           val response = metrics {
             gauge("ambient_temp", help = "Ambient temp from the sensor.") { tempSensor.measure() }
+
+            gauge("dough_growth", help = "Growth of the dough in percent.") {
+              doughStatusRepo.getLatestStatus()
+                ?.let { doughAnalysisRepo.forDoughStatus(it.id) }
+                ?.toAnalyzerResult()
+                ?.growth
+                ?.let { it * 100.0 }
+            }
           }
           call.respond(response)
         }
