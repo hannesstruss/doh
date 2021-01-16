@@ -15,5 +15,12 @@ services:
       - "8087:9090"
     volumes:
       - "prometheus_data:/prometheus"
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - "grafana_data:/var/lib/grafana"
+    ports:
+      - "8086:3000"
 volumes:
   prometheus_data: {}
+  grafana_data: {}
