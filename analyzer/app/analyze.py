@@ -17,7 +17,7 @@ CROP_X1 = 790
 CROP_X2 = 850
 CROP_Y1 = 190
 CROP_Y2 = 950
-GLASS_BOTTOM_Y = 935 - CROP_Y1
+GLASS_BOTTOM_Y = 925 - CROP_Y1
 
 argparser = argparse.ArgumentParser(description="Read sourdough starter status.")
 subparsers = argparser.add_subparsers(help="The task you want to get done.", dest="cmd")
