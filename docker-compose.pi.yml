@@ -22,3 +22,5 @@ services:
     image: "doh32:5000/doh/analyzer"
   prometheus:
     image: "doh32:5000/doh/prometheus"
+  system_metrics:
+    image: "doh32:5000/doh/system_metrics"

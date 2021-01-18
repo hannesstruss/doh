@@ -57,7 +57,9 @@ class DohWebApp
         host("192.168.1.28:8081")
       }
 
-      install(CallLogging)
+      install(CallLogging) {
+        this.
+      }
 
       routing {
         get("/doughstatuses") {

@@ -27,6 +27,13 @@ function build_prometheus {
     )
 }
 
+function build_system_metrics {
+    (
+        cd system-metrics
+        docker buildx build -t $REGISTRY/doh/system_metrics --platform $PLATFORMS --push .
+    )
+}
+
 case $1 in
   build)
     build_analyzer
@@ -46,8 +53,19 @@ case $1 in
     build_prometheus
     ;;
 
+  build_system_metrics)
+    build_system_metrics
+    ;;
+
   pull_remote)
-    ssh root@$TARGET "cd /doh; docker pull $REGISTRY/doh/app; docker pull $REGISTRY/doh/analyzer; docker pull $REGISTRY/doh/prometheus; docker-compose -f docker-compose.yml -f docker-compose.pi.yml up -d"
+    ssh root@$TARGET << EOF
+        cd /doh
+        docker pull $REGISTRY/doh/app
+        docker pull $REGISTRY/doh/analyzer
+        docker pull $REGISTRY/doh/prometheus
+        docker pull $REGISTRY/doh/system_metrics
+        docker-compose -f docker-compose.yml -f docker-compose.pi.yml up -d
+EOF
     ;;
 
   deploy_compose)
