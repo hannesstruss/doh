@@ -26,6 +26,7 @@ external interface ImageStageProps : RProps {
   var src: String?
   var zoomLevel: ZoomLevel
   var doughData: AnalyzerResult.GlassPresent?
+  var showAnalyzerOverlay: Boolean
 }
 
 external interface ImageStageState : RState {
@@ -53,22 +54,25 @@ class ImageStage : RComponent<ImageStageProps, ImageStageState>() {
 
   private suspend fun generateDataUri(
     imageUrl: String,
-    doughData: AnalyzerResult.GlassPresent?
+    doughData: AnalyzerResult.GlassPresent?,
+    drawAnalyzerOverlay: Boolean,
   ): String = suspendCoroutine { cont ->
     val ctx = canvas.getContext("2d") as CanvasRenderingContext2D
     val img = document.createElement("img") as HTMLImageElement
     img.crossOrigin = "anonymous"
     img.onload = {
-      println("I loaded the image! ${img.width}x${img.height}")
       canvas.width = img.width
       canvas.height = img.height
       ctx.drawImage(img, 0.0, 0.0)
-      ctx.lineWidth = 3.0
 
-      if (doughData != null) {
-        ctx.drawLevel("green", doughData.doughLevelY.toDouble())
-        ctx.drawLevel("blue", doughData.rubberBandY.toDouble())
-        ctx.drawLevel("red", doughData.glassBottomY.toDouble())
+      if (drawAnalyzerOverlay) {
+        ctx.lineWidth = 3.0
+
+        if (doughData != null) {
+          ctx.drawLevel("green", doughData.doughLevelY.toDouble())
+          ctx.drawLevel("blue", doughData.rubberBandY.toDouble())
+          ctx.drawLevel("red", doughData.glassBottomY.toDouble())
+        }
       }
 
       cont.resume(canvas.toDataURL())
@@ -89,7 +93,7 @@ class ImageStage : RComponent<ImageStageProps, ImageStageState>() {
     props.src?.let { src ->
       // TODO use better scope and cancel job
       GlobalScope.launch {
-        val nextDataUri = generateDataUri(src, props.doughData)
+        val nextDataUri = generateDataUri(src, props.doughData, props.showAnalyzerOverlay)
         setState {
           dataUri = nextDataUri
         }
@@ -102,7 +106,7 @@ class ImageStage : RComponent<ImageStageProps, ImageStageState>() {
   }
 
   override fun componentDidUpdate(prevProps: ImageStageProps, prevState: ImageStageState, snapshot: Any) {
-    if (prevProps.src != props.src) {
+    if (prevProps.src != props.src || prevProps.showAnalyzerOverlay != props.showAnalyzerOverlay) {
       loadImage()
     }
   }

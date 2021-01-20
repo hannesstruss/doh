@@ -48,6 +48,7 @@ external interface AppState : RState {
   var viewportHeight: Int
   var showStatusId: Boolean
   var ambientTemperature: Double?
+  var showAnalyzerOverlay: Boolean
 }
 
 val AppState.selectedStatus: DoughStatusViewModel?
@@ -74,6 +75,7 @@ class App : RComponent<RProps, AppState>() {
     showAmbient = true
     viewportHeight = window.innerHeight
     showStatusId = false
+    showAnalyzerOverlay = false
   }
 
   override fun componentDidMount() {
@@ -167,6 +169,7 @@ class App : RComponent<RProps, AppState>() {
             src = imgUrl
             zoomLevel = state.zoomLevel
             doughData = selectedStatus.doughData
+            showAnalyzerOverlay = state.showAnalyzerOverlay
           }
         }
         styledDiv {
@@ -200,6 +203,11 @@ class App : RComponent<RProps, AppState>() {
           navButton(if (state.showAmbient) "🌚" else "💡") {
             setState {
               showAmbient = !showAmbient
+            }
+          }
+          navButton(if (state.showAnalyzerOverlay) "🤖" else "👱🏻‍♂️") {
+            setState {
+              showAnalyzerOverlay = !showAnalyzerOverlay
             }
           }
           navButton(if (state.isAtLastIndex) "✋" else "👉") {
