@@ -9,6 +9,7 @@ RUN apt-get update -qq \
     openjdk-11-jre \
     unzip \
     imagemagick \
+    curl \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -20,5 +21,9 @@ RUN unzip /tmp/app.zip -d /tmp/unzipped-app \
 
 # Add raspistill to path
 ENV PATH="/opt/vc/bin:${PATH}"
+
+EXPOSE 8080
+
+HEALTHCHECK --timeout=5s --start-period=60s CMD curl --fail http://localhost:8080/metrics || exit 1
 
 CMD /app/bin/app
