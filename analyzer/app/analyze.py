@@ -15,6 +15,7 @@ from skimage.measure import regionprops, label
 
 CROP_X1 = 790
 CROP_X2 = 850
+CROP_X_CENTER = int(CROP_X1 + (CROP_X2 - CROP_X1) / 2.0)
 CROP_Y1 = 190
 CROP_Y2 = 950
 GLASS_BOTTOM_Y = 925 - CROP_Y1
