@@ -26,6 +26,7 @@ object Deps {
     const val clientCio = "io.ktor:ktor-client-cio:${Versions.ktor}"
     const val clientSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
     const val clientJsonJs = "io.ktor:ktor-client-json:${Versions.ktor}"
+    const val locations = "io.ktor:ktor-locations:${Versions.ktor}"
   }
 
   object Dagger {

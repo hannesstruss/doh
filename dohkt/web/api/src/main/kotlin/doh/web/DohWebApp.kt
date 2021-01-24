@@ -20,6 +20,9 @@ import io.ktor.http.content.files
 import io.ktor.http.content.resolveResource
 import io.ktor.http.content.resources
 import io.ktor.http.content.static
+import io.ktor.locations.Location
+import io.ktor.locations.Locations
+import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.get
@@ -31,6 +34,7 @@ import io.ktor.server.netty.NettyApplicationEngine
 import java.io.File
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.UUID
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -57,9 +61,28 @@ class DohWebApp
         host("192.168.1.28:8081")
       }
 
+      install(Locations)
       install(CallLogging)
 
       routing {
+        @Location("/doughstatuses/{id}")
+        data class DoughStatusDetail(val id: String)
+
+        get<DoughStatusDetail> { route ->
+          val uuid = UUID.fromString(route.id)
+          val status = doughStatusRepo.getById(uuid)
+          if (status != null) {
+            val viewModel = DoughStatusViewModel.fromDoughStatus(
+              ImagesPath,
+              status,
+              doughAnalysisRepo.forDoughStatus(uuid)
+            )
+            call.respond(viewModel)
+          } else {
+            call.respondText(status = HttpStatusCode.NotFound) { "Not found" }
+          }
+        }
+
         get("/doughstatuses") {
           val latestStatuses = doughStatusRepo.getAllAfter(Instant.now().minus(12, ChronoUnit.HOURS))
           val analyzerResults = doughAnalysisRepo.forDoughStatuses(latestStatuses.map { it.id })
@@ -87,7 +110,6 @@ class DohWebApp
             gauge("dough_growth", help = "Growth of the dough in percent.") {
               doughStatusRepo.getLatestStatus()
                 ?.let { doughAnalysisRepo.forDoughStatus(it.id) }
-                ?.toAnalyzerResult()
                 ?.growth
                 ?.let { it * 100.0 }
             }
@@ -111,7 +133,7 @@ class DohWebApp
 
         get("/siri") {
           val latestStatus = doughStatusRepo.getLatestStatus()
-          val latestAnalysis = latestStatus?.id?.let { doughAnalysisRepo.forDoughStatus(it) }?.toAnalyzerResult()
+          val latestAnalysis = latestStatus?.id?.let { doughAnalysisRepo.forDoughStatus(it) }
           val growth = latestAnalysis?.growth
 
           if (latestStatus != null) {

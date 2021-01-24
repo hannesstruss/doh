@@ -24,3 +24,8 @@ getLatest:
 SELECT * FROM DoughStatus
 ORDER BY recordedAt DESC
 LIMIT 1;
+
+getById:
+SELECT * FROM DoughStatus
+WHERE id = ?
+LIMIT 1;

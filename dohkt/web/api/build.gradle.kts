@@ -20,6 +20,7 @@ dependencies {
   api(Deps.Ktor.serverNetty)
   api(Deps.Ktor.serialization)
   implementation(Deps.Ktor.htmlBuilder)
+  implementation(Deps.Ktor.locations)
   api(Deps.Dagger.inject)
 }
 

@@ -8,10 +8,6 @@ import java.util.UUID
 class DoughStatusRepo(
   private val db: DohDatabase
 ) {
-  suspend fun getAll(): List<DoughStatus> = withContext(IO) {
-    db.doughStatusQueries.getAll(0, 100).executeAsList()
-  }
-
   suspend fun getAllAfter(instant: Instant): List<DoughStatus> = withContext(IO) {
     db.doughStatusQueries.getAllAfter(instant).executeAsList()
   }
@@ -32,5 +28,9 @@ class DoughStatusRepo(
 
   suspend fun getLatestStatus(): DoughStatus? = withContext(IO) {
     db.doughStatusQueries.getLatest().executeAsOneOrNull()
+  }
+
+  suspend fun getById(id: UUID): DoughStatus? = withContext(IO) {
+    db.doughStatusQueries.getById(id).executeAsOneOrNull()
   }
 }
