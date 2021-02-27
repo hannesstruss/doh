@@ -9,7 +9,7 @@ buildscript {
 }
 
 plugins {
-  kotlin("jvm") version "1.4.21" apply false
+  kotlin("jvm") version "1.4.30" apply false
   kotlin("plugin.serialization") version "1.4.0" apply false
   id("com.squareup.sqldelight") version "1.4.1" apply false
 }
