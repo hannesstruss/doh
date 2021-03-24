@@ -38,7 +38,7 @@ import styled.styledH1
 import styled.styledP
 import kotlin.math.roundToInt
 
-private val BackendHost = "http://${window.location.hostname}:8080"
+private val BackendHost = window.location.origin
 
 external interface AppState : RState {
   var doughStatuses: List<DoughStatusViewModel>
