@@ -21,9 +21,10 @@ services:
       - "grafana_data:/var/lib/grafana"
     ports:
       - "8086:3000"
-  system_metrics:
+  node_exporter:
+    image: prom/node-exporter
     ports:
-      - "8088:8080"
+      - "9100:9100"
 volumes:
   prometheus_data: {}
   grafana_data: {}

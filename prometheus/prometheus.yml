@@ -6,4 +6,8 @@ scrape_configs:
   - job_name: 'prometheus'
 
     static_configs:
-      - targets: ['app:8080', 'analyzer:8080', 'system_metrics:8080']
+      - targets:
+        - 'app:8080'
+        - 'analyzer:8080'
+        - 'system_metrics:8080'
+        - 'node_exporter:9100'
