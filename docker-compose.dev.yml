@@ -16,5 +16,3 @@ services:
       - FLASK_DEBUG=1
   prometheus:
     build: prometheus
-  system_metrics:
-    build: system-metrics

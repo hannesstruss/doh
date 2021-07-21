@@ -37,3 +37,4 @@ dependencies {
   implementation(Deps.Ktor.clientSerialization)
   implementation(Deps.Ktor.clientJsonJs)
 }
+
