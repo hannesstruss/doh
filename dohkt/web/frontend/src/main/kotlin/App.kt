@@ -38,7 +38,7 @@ import styled.styledH1
 import styled.styledP
 import kotlin.math.roundToInt
 
-private val BackendHost = window.location.origin
+private val BackendHost = BackendHostOverride ?: window.location.origin
 
 external interface AppState : RState {
   var doughStatuses: List<DoughStatusViewModel>
