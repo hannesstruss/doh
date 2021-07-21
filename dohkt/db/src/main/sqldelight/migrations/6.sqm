@@ -1,0 +1,14 @@
+CREATE TABLE Starter (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    createdAt INTEGER NOT NULL
+);
+
+CREATE TABLE Feeding (
+    id TEXT NOT NULL PRIMARY KEY,
+    starterId TEXT NOT NULL,
+    fedAt INTEGER NOT NULL,
+    waterGrams INTEGER NOT NULL,
+    flourGrams INTEGER NOT NULL,
+    carryOverStarterGrams INTEGER NOT NULL
+);
