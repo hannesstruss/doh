@@ -24,6 +24,6 @@ ENV PATH="/opt/vc/bin:${PATH}"
 
 EXPOSE 8080
 
-HEALTHCHECK --timeout=5s --start-period=60s CMD curl --fail http://localhost:8080/metrics || exit 1
+HEALTHCHECK --timeout=5s --start-period=60s CMD curl -m 5 --fail http://localhost:8080/metrics || exit 1
 
 CMD /app/bin/app
