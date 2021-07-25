@@ -1,12 +1,12 @@
 package doh.meta
 
 object Versions {
-  const val ktor = "1.4.2"
-  const val dagger = "2.28.3"
+  const val ktor = "1.6.1"
+  const val dagger = "2.38"
 
   object KotlinX {
     const val coroutinesCore = "1.3.9"
-    const val serialization = "1.0.1"
+    const val serialization = "1.2.2"
   }
 }
 
@@ -35,7 +35,7 @@ object Deps {
     const val compiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
   }
 
-  const val SqlDelightDriver = "com.squareup.sqldelight:sqlite-driver:1.4.1"
+  const val SqlDelightDriver = "com.squareup.sqldelight:sqlite-driver:1.5.1"
 
   object Testing {
 

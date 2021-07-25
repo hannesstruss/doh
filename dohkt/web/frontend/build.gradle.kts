@@ -17,8 +17,6 @@ repositories {
 
 // TODO unify deps in Deps class and update to latest versions
 dependencies {
-  implementation(kotlin("stdlib-js"))
-
   implementation(project(":web:transport-model"))
 
   implementation("org.jetbrains:kotlin-react:17.0.1-pre.148-kotlin-1.4.30")
