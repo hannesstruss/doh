@@ -44,7 +44,8 @@ val generateConfig = project.tasks.register("generateConfig") {
     val f = File(configSourceDir, "config.kt")
     val value = project.properties.getOrDefault("apiHost", null)
       ?.let { "\"$it\"" }
-    f.writeText("val BackendHostOverride: String? = $value")
+      ?: "kotlinx.browser.window.location.origin"
+    f.writeText("val BackendHost: String = $value")
   }
 }
 
