@@ -1,0 +1,11 @@
+import java.time.Instant;
+import java.util.UUID;
+
+CREATE TABLE Feeding (
+    id TEXT AS UUID NOT NULL PRIMARY KEY,
+    starterId TEXT AS UUID NOT NULL,
+    fedAt INTEGER AS Instant NOT NULL,
+    waterGrams INTEGER NOT NULL,
+    flourGrams INTEGER NOT NULL,
+    carryOverStarterGrams INTEGER NOT NULL
+);

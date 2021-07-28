@@ -18,6 +18,8 @@ services:
       - DOH_IMAGEDIR=/dohdata/doh-images
       - DOH_DATABASEPATH=/dohdata/doh.sqlite
       - LD_LIBRARY_PATH=/opt/vc/lib
+      - DOH_JWT_SECRET=${DOH_JWT_SECRET}
+      - DOH_ADMIN_PASSWORD=${DOH_ADMIN_PASSWORD}
   analyzer:
     image: "doh32:5000/doh/analyzer"
   prometheus:

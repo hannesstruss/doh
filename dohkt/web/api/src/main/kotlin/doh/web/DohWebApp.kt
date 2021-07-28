@@ -1,10 +1,13 @@
 package doh.web
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
+import doh.config.AdminPassword
 import doh.config.ImageDir
+import doh.config.JWTSecret
 import doh.db.DoughAnalysisRepo
 import doh.db.DoughStatusRepo
 import doh.db.TemperatureReadingRepo
-import doh.db.mappers.toAnalyzerResult
 import doh.shared.AnalyzerResult
 import doh.shared.growth
 import doh.temperature.TempSensor
@@ -12,6 +15,11 @@ import doh.web.helpers.formattedDuration
 import doh.web.helpers.metrics
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.auth.authenticate
+import io.ktor.auth.jwt.JWTPrincipal
+import io.ktor.auth.jwt.jwt
+import io.ktor.auth.principal
 import io.ktor.features.CORS
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
@@ -23,9 +31,11 @@ import io.ktor.http.content.static
 import io.ktor.locations.Location
 import io.ktor.locations.Locations
 import io.ktor.locations.get
+import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.get
+import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
@@ -34,6 +44,7 @@ import io.ktor.server.netty.NettyApplicationEngine
 import java.io.File
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -46,7 +57,9 @@ class DohWebApp
   private val doughAnalysisRepo: DoughAnalysisRepo,
   private val temperatureReadingRepo: TemperatureReadingRepo,
   private val tempSensor: TempSensor,
-  @ImageDir private val imagesDir: File
+  @ImageDir private val imagesDir: File,
+  @JWTSecret private val jwtSecret: String,
+  @AdminPassword private val adminPassword: String
 ) {
   fun createWebApp(): NettyApplicationEngine {
     return embeddedServer(Netty, 8080) {
@@ -64,10 +77,54 @@ class DohWebApp
 
       install(Locations)
       install(CallLogging)
+      install(Authentication) {
+        jwt("auth-jwt") {
+          realm = "doh"
+          verifier(
+            JWT
+              .require(Algorithm.HMAC256(jwtSecret))
+              .withAudience("https://dough.ai/")
+              .withIssuer("https://dough.ai/")
+              .build()
+          )
+          validate { credential ->
+            if (credential.payload.getClaim("username").asString() != "") {
+              JWTPrincipal(credential.payload)
+            } else {
+              null
+            }
+          }
+        }
+      }
 
       routing {
         @Location("/doughstatuses/{id}")
         data class DoughStatusDetail(val id: String)
+
+        post("/login") {
+          val (username, password) = call.receive<Credentials>()
+          if (username == "admin" && password == adminPassword) {
+            val token = JWT.create()
+              .withAudience("https://dough.ai/")
+              .withIssuer("https://dough.ai/")
+              .withClaim("username", username)
+              .withExpiresAt(Date(Long.MAX_VALUE))
+              .sign(Algorithm.HMAC256(jwtSecret))
+
+            call.respond(hashMapOf("token" to token))
+          } else {
+            call.respondText("Invalid credentials", status = HttpStatusCode.Unauthorized)
+          }
+        }
+
+        authenticate("auth-jwt") {
+          get("/secret") {
+            val principal = call.principal<JWTPrincipal>()
+            val username = principal!!.payload.getClaim("username").asString()
+            val expiresAt = principal.expiresAt?.time?.minus(System.currentTimeMillis())
+            call.respondText("Hello, $username! Token is expired at $expiresAt ms.")
+          }
+        }
 
         get<DoughStatusDetail> { route ->
           val uuid = UUID.fromString(route.id)
@@ -92,7 +149,7 @@ class DohWebApp
             DoughStatusViewModel.fromDoughStatus(
               ImagesPath,
               it,
-              analyzerResults.get(it.id) as? AnalyzerResult.GlassPresent
+              analyzerResults[it.id] as? AnalyzerResult.GlassPresent
             )
           }
 

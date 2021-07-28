@@ -4,7 +4,6 @@ buildscript {
   repositories {
     google()
     mavenCentral()
-    jcenter()
   }
 }
 
@@ -18,13 +17,13 @@ subprojects {
   repositories {
     google()
     mavenCentral()
-    jcenter()
   }
 
   tasks.withType<KotlinCompile> {
     kotlinOptions {
       jvmTarget = "1.8"
-      freeCompilerArgs = listOf("-progressive")
+      freeCompilerArgs += "-progressive"
+      freeCompilerArgs += "-Xopt-in=io.ktor.locations.KtorExperimentalLocationsAPI"
     }
   }
 }

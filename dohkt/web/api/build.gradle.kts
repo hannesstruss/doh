@@ -2,11 +2,11 @@ import doh.meta.Deps
 
 plugins {
   kotlin("jvm")
+  kotlin("plugin.serialization")
 }
 
 repositories {
   mavenCentral()
-  jcenter()
 }
 
 dependencies {
@@ -17,8 +17,11 @@ dependencies {
   implementation(project(":shared"))
 
   implementation(Deps.KotlinX.serializationJson)
+  implementation(Deps.KotlinX.serializationCore)
   api(Deps.Ktor.serverNetty)
   api(Deps.Ktor.serialization)
+  api(Deps.Ktor.auth)
+  api(Deps.Ktor.authJwt)
   implementation(Deps.Ktor.htmlBuilder)
   implementation(Deps.Ktor.locations)
   api(Deps.Dagger.inject)

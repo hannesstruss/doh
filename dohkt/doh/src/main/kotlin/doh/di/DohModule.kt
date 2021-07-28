@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import doh.config.AnalyzerHost
 import doh.config.ImageDir
+import doh.config.JWTSecret
 import doh.db.DohDatabase
 import doh.db.DoughAnalysisRepo
 import doh.db.DoughStatusRepo

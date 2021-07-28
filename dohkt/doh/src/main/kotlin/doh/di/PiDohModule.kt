@@ -3,6 +3,8 @@ package doh.di
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import doh.config.AdminPassword
+import doh.config.JWTSecret
 import doh.grab.Ambient
 import doh.grab.Backlight
 import doh.grab.Camera
@@ -30,6 +32,14 @@ abstract class PiDohModule {
     fun ambientLight(): Light {
       return GpioLight(GpioPin(18))
     }
+
+    @Provides @JWTSecret
+    fun jwtSecret(): String = System.getenv("DOH_JWT_SECRET")
+      ?: throw IllegalStateException("DOH_JWT_SECRET is not defined")
+
+    @Provides @AdminPassword
+    fun adminPassword(): String = System.getenv("DOH_ADMIN_PASSWORD")
+      ?: throw IllegalStateException("DOH_ADMIN_PASSWORD is not defined")
   }
 
   @Binds
