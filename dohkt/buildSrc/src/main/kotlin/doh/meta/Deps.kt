@@ -22,6 +22,8 @@ object Deps {
   object Ktor {
     const val serverNetty = "io.ktor:ktor-server-netty:${Versions.ktor}"
     const val serialization = "io.ktor:ktor-serialization:${Versions.ktor}"
+    const val auth = "io.ktor:ktor-auth:${Versions.ktor}"
+    const val authJwt = "io.ktor:ktor-auth-jwt:${Versions.ktor}"
     const val htmlBuilder = "io.ktor:ktor-html-builder:${Versions.ktor}"
     const val clientCio = "io.ktor:ktor-client-cio:${Versions.ktor}"
     const val clientSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"

@@ -23,6 +23,15 @@ fun createDb(url: String): DohDatabase {
     TemperatureReadingAdapter = TemperatureReading.Adapter(
       idAdapter = UUIDAdapter,
       measuredAtAdapter = InstantAdapter
+    ),
+    FeedingAdapter = Feeding.Adapter(
+      idAdapter = UUIDAdapter,
+      starterIdAdapter = UUIDAdapter,
+      fedAtAdapter = InstantAdapter
+    ),
+    StarterAdapter = Starter.Adapter(
+      idAdapter = UUIDAdapter,
+      createdAtAdapter = InstantAdapter
     )
   )
 }

@@ -13,3 +13,11 @@ annotation class ImageDir
 @Retention(AnnotationRetention.RUNTIME)
 @Qualifier
 annotation class AnalyzerHost
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class JWTSecret
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class AdminPassword
