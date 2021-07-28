@@ -14,8 +14,7 @@ import org.w3c.dom.HTMLImageElement
 import react.RBuilder
 import react.RComponent
 import react.RProps
-import react.RState
-import react.ReactElement
+import react.State
 import react.setState
 import styled.css
 import styled.styledImg
@@ -29,7 +28,7 @@ external interface ImageStageProps : RProps {
   var showAnalyzerOverlay: Boolean
 }
 
-external interface ImageStageState : RState {
+external interface ImageStageState : State {
   var dataUri: String?
 }
 
@@ -130,8 +129,9 @@ class ImageStage : RComponent<ImageStageProps, ImageStageState>() {
   }
 }
 
-fun RBuilder.imageStage(handler: ImageStageProps.() -> Unit): ReactElement {
-  return child(ImageStage::class) {
-    this.attrs(handler)
+fun RBuilder.imageStage(handler: ImageStageProps.() -> Unit) = child(ImageStage::class) {
+  attrs {
+    handler()
   }
 }
+

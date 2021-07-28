@@ -12,21 +12,22 @@ kotlin {
 }
 
 repositories {
-  maven("https://kotlin.bintray.com/kotlin-js-wrappers/")
+  mavenCentral()
+//  maven("https://kotlin.bintray.com/kotlin-js-wrappers/")
 }
 
 // TODO unify deps in Deps class and update to latest versions
 dependencies {
   implementation(project(":web:transport-model"))
 
-  implementation("org.jetbrains:kotlin-react:17.0.1-pre.148-kotlin-1.4.30")
-  implementation("org.jetbrains:kotlin-react-dom:17.0.1-pre.148-kotlin-1.4.30")
-  implementation(npm("react", "17.0.1"))
-  implementation(npm("react-dom", "17.0.1"))
+  implementation("org.jetbrains.kotlin-wrappers:kotlin-react:17.0.2-pre.222-kotlin-1.5.21")
+  implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:17.0.2-pre.222-kotlin-1.5.21")
+  implementation(npm("react", "17.0.2"))
+  implementation(npm("react-dom", "17.0.2"))
 
   //Kotlin Styled (chapter 3)
-  implementation("org.jetbrains:kotlin-styled:5.2.1-pre.148-kotlin-1.4.30")
-  implementation(npm("styled-components", "~5.2.1"))
+  implementation("org.jetbrains.kotlin-wrappers:kotlin-styled:5.3.0-pre.222-kotlin-1.5.21")
+  implementation(npm("styled-components", "~5.3.0"))
   implementation(npm("inline-style-prefixer", "~6.0.0"))
 
   implementation(Deps.KotlinX.coroutinesCore)

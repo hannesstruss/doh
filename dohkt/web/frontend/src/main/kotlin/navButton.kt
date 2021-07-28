@@ -7,7 +7,6 @@ import kotlinx.css.TextAlign
 import kotlinx.css.VerticalAlign
 import kotlinx.css.alignItems
 import kotlinx.css.backgroundColor
-import kotlinx.css.border
 import kotlinx.css.cursor
 import kotlinx.css.display
 import kotlinx.css.em
@@ -15,8 +14,6 @@ import kotlinx.css.fontSize
 import kotlinx.css.height
 import kotlinx.css.justifyContent
 import kotlinx.css.marginBottom
-import kotlinx.css.marginLeft
-import kotlinx.css.marginRight
 import kotlinx.css.pct
 import kotlinx.css.px
 import kotlinx.css.rem
@@ -27,7 +24,7 @@ import kotlinx.html.A
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.events.Event
 import react.RBuilder
-import react.dom.span
+import react.dom.attrs
 import styled.StyledDOMBuilder
 import styled.css
 import styled.styledA

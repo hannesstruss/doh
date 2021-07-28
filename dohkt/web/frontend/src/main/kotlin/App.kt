@@ -30,7 +30,8 @@ import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import react.RComponent
 import react.RProps
-import react.RState
+import react.State
+import react.dom.attrs
 import react.setState
 import styled.css
 import styled.styledDiv
@@ -40,7 +41,7 @@ import kotlin.math.roundToInt
 
 private val BackendHost = BackendHostOverride ?: window.location.origin
 
-external interface AppState : RState {
+external interface AppState : State {
   var doughStatuses: List<DoughStatusViewModel>
   var selectedIndex: Int
   var zoomLevel: ZoomLevel
